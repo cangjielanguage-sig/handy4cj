@@ -6,7 +6,7 @@ import std.unittest.*
 import std.unittest.testmacro.*
 
 @Test
-public class ArrayDifferenceTest {
+public class ArrayTest {
     @TestCase
     public func test_arrayDifferenceAtoB() {
         var testA = ArrayList<Int64>([1, 2, 3, 4])

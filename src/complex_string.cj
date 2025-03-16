@@ -186,7 +186,6 @@ public func checkStr(seq: String, minLen: UIntNative, maxLen: UIntNative, rules:
 
 // 判断是否符合电子邮件格式
 let reEmailFinder = Regex("([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\\.[a-zA-Z0-9_-]+)")
-
 public func strContainsEmail(seq: String): Bool {
     let matchEmail = Matcher(reEmailFinder, seq)
     return !matchEmail.findAll().isNone()

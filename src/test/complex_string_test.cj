@@ -68,8 +68,7 @@ public class TestComplexString {
                 TestCheckStrDemo("denies lowercase", "LOWER cASE", 0, 100, checkStrDenyLowerCase,
                     checkStrLowerCaseDenied),
                 TestCheckStrDemo("denies unicode", "TAB	ÇÂÖÉд", 0, 100, checkStrDenyUnicode, checkStrUnicodeDenied),
-                TestCheckStrDemo("missed numbers", "NO NUMBERS", 0, 100, checkStrRequireNumbers, checkStrNumbersNotFound
-                ),
+                TestCheckStrDemo("missed numbers", "NO NUMBERS", 0, 100, checkStrRequireNumbers, checkStrNumbersNotFound),
                 TestCheckStrDemo("missed letters", " 87 %323232	", 0, 100, checkStrRequireLetters,
                     checkStrLettersNotFound),
                 TestCheckStrDemo("missed symbols", "NO SYMBOLS 123", 0, 100, checkStrRequireSymbols,
@@ -82,8 +81,8 @@ public class TestComplexString {
                     checkStrLowercaseNotFound)
             ]
         )
-
-        testList |> forEach {i => @Expect(checkStr(i.input, i.minLen, i.maxLen, i.flags), i.expectedOutput)}
+  
+        testList |> forEach { i => @Expect(checkStr(i.input, i.minLen, i.maxLen, i.flags), i.expectedOutput)}
     }
 
     @TestCase

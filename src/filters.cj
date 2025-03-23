@@ -2,6 +2,7 @@ package handy4cj
 
 import std.collection.*
 import std.regex.*
+import std.unicode.*
 
 let reDupSpaces = Regex("\\s+")
 
@@ -28,7 +29,7 @@ public func onlyLetters(sequence: String): String {
         return ""
     }
     let letters = ArrayList<String>([])
-    sequence.toRuneArray() |> filter {i => i.isAsciiLetter()} |> forEach<Rune> {i => letters.append(i.toString())}
+    sequence.toRuneArray() |> filter {i => i.isLetter() } |> forEach<Rune> {i => letters.append(i.toString())}
     return String.join(letters.toArray())
 }
 
@@ -38,7 +39,7 @@ public func onlyDigits(sequence: String): String {
         return ""
     }
     let digits = ArrayList<String>([])
-    sequence.toRuneArray() |> filter {i => i.isAsciiNumber()} |> forEach<Rune> {i => digits.append(i.toString())}
+    sequence.toRuneArray() |> filter {i => i.isNumber()} |> forEach<Rune> {i => digits.append(i.toString())}
     return String.join(digits.toArray())
 }
 
@@ -48,7 +49,7 @@ public func onlyLettersAndNumbers(sequence: String): String {
         return ""
     }
     let alphanumeric = ArrayList<String>([])
-    sequence.toRuneArray() |> filter {i => i.isAsciiNumberOrLetter()} |>
+    sequence.toRuneArray() |> filter {i => i.isNumber() || i.isLetter()} |>
         forEach<Rune> {i => alphanumeric.append(i.toString())}
     return String.join(alphanumeric.toArray())
 }
@@ -59,6 +60,6 @@ public func removeDigits(sequeue: String): String {
         return ""
     }
     let rs = ArrayList<String>([])
-    sequeue.toRuneArray() |> filter {i => !i.isAsciiNumber()} |> forEach<Rune> {i => rs.append(i.toString())}
+    sequeue.toRuneArray() |> filter {i => !i.isNumber()} |> forEach<Rune> {i => rs.append(i.toString())}
     return String.join(rs.toArray())
 }

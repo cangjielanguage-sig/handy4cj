@@ -11,12 +11,11 @@ public func stringAsFloat(s: String, decimalSeparator: Rune, thousandsSeparator:
 
     var newS = ""
     let maxLength = 20
-    if (s.size > maxLength) {
-        newS = s[Range<Int64>(0, maxLength - 1, 1, false, true, false)]
+    match (s.size > maxLength) {
+        case true => newS = s[Range<Int64>(0, maxLength - 1, 1, false, true, false)]
             .replace(decimalSeparator.toString(), ".")
             .replace(thousandsSeparator.toString(), "")
-    } else {
-        newS = s.replace(decimalSeparator.toString(), ".").replace(thousandsSeparator.toString(), "")
+        case false => newS = s.replace(decimalSeparator.toString(), ".").replace(thousandsSeparator.toString(), "")
     }
 
     try {

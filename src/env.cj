@@ -51,9 +51,13 @@ public func envCheck(varName: String, defaultValue: String, mandatory: Bool, deb
 }
 
 public func envStr(key: String, defaultValue: String): String {
-    return match (getEnv(key)) {
-        case None => defaultValue
-        case Some(v) => v
+    match (getEnv(key)) {
+        case None => return defaultValue
+        case Some(v) => 
+            if(v == ""){
+                return defaultValue
+            }
+            return v
     }
 }
 
@@ -61,7 +65,11 @@ public func envStrs(key: String, separator: String, defaultValue: ArrayList<Stri
     let envList = ArrayList<String>()
     match (getEnv(key)) {
         case None => return defaultValue
-        case Some(v) => v.split(separator, removeEmpty: false) |> forEach<String>(envList.append)
+        case Some(v) => 
+            if(v == ""){
+                return defaultValue
+            }
+            v.split(separator, removeEmpty: false) |> forEach<String>(envList.append)
     }
     return envList
 }
@@ -96,8 +104,12 @@ public func envInts(key: String, separator: String, defaultValue: ArrayList<IntN
                 if (!defaultValue.isEmpty()) {
                     return defaultValue
                 }
-            case Some(v) => v.split(separator, removeEmpty: false) |>
-                forEach<String> {i => envList.append(Decimal(i).toIntNative())}
+            case Some(v) => 
+                if(v == "" && !defaultValue.isEmpty()){
+                    return defaultValue
+                }
+                v.split(separator, removeEmpty: false) |>
+                    forEach<String> {i => envList.append(Decimal(i).toIntNative())}
         }
     } catch (e: IllegalArgumentException) {
         return defaultValue

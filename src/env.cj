@@ -32,8 +32,10 @@ public func debugLog(msg: String, debugPrint: Bool) {
 // envCheck 测试环境变量
 public func envCheck(varName: String, defaultValue: String, mandatory: Bool, debugPrint: Bool) {
     if (!getEnv(varName).isNone()) {
-        debugLog("environment variable " + varName + " asserted", debugPrint)
-        return ""
+        if (Some(getEnv(varName)) != "") {
+            debugLog("environment variable " + varName + " asserted", debugPrint)
+            return ""
+        }
     }
     if (defaultValue != "") {
         try {
@@ -53,8 +55,8 @@ public func envCheck(varName: String, defaultValue: String, mandatory: Bool, deb
 public func envStr(key: String, defaultValue: String): String {
     match (getEnv(key)) {
         case None => return defaultValue
-        case Some(v) => 
-            if(v == ""){
+        case Some(v) =>
+            if (v == "") {
                 return defaultValue
             }
             return v
@@ -65,8 +67,8 @@ public func envStrs(key: String, separator: String, defaultValue: ArrayList<Stri
     let envList = ArrayList<String>()
     match (getEnv(key)) {
         case None => return defaultValue
-        case Some(v) => 
-            if(v == ""){
+        case Some(v) =>
+            if (v == "") {
                 return defaultValue
             }
             v.split(separator, removeEmpty: false) |> forEach<String>(envList.append)
@@ -104,8 +106,8 @@ public func envInts(key: String, separator: String, defaultValue: ArrayList<IntN
                 if (!defaultValue.isEmpty()) {
                     return defaultValue
                 }
-            case Some(v) => 
-                if(v == "" && !defaultValue.isEmpty()){
+            case Some(v) =>
+                if (v == "" && !defaultValue.isEmpty()) {
                     return defaultValue
                 }
                 v.split(separator, removeEmpty: false) |>

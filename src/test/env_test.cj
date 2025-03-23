@@ -149,10 +149,14 @@ public class TestEnv {
                 TestEnvCheckDemo("ENVMANDATORYWITHDEFAULT", "xyz", " ", true, true)
             ]
         )
-        testList |> forEach<TestEnvCheckDemo> {i => setEnv(i.title, i.define)}
         testList |>
             forEach<TestEnvCheckDemo> {i => @Assert(envCheck(i.title, i.defaultValue, i.mandatory, i.debugLog), "")}
         @AssertThrows[Exception](envCheck("ENVEMPTYMANDATORY", "", true, true))
+
+        setEnv("TESTSETDONE", "done")
+        @Assert(envCheck("TESTSETDONE", "", true, true), "")
+        setEnv("TESTSETEMPTYDONE", "")
+        @AssertThrows[Exception](envCheck("TESTSETEMPTYDONE", "", true, true))
     }
 
     @TestCase
@@ -308,10 +312,7 @@ public class TestEnv {
                 )
             ]
         )
-        testList |>
-            forEach<TestEnvCheckerManyDemo> {
-            i => i.envCheckers |> forEach<EnvChecker> {j => setEnv(j.varName, j.defaultValue)}
-        }
+
         @Assert(envCheckerMany(testList[0].envCheckers).toString(), "")
         @Assert(envCheckerMany(testList[3].envCheckers).toString(), "")
         @AssertThrows[Exception](envCheckerMany(testList[1].envCheckers))

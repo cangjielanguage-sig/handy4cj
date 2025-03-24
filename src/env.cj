@@ -51,14 +51,14 @@ public func envCheck(varName: String, defaultValue: String, mandatory: Bool, deb
 }
 
 public func envStr(key: String, defaultValue: String): String {
-    if(!getEnv(key).isNone() && Some(getEnv(key)) != ""){
+    if (!getEnv(key).isNone() && Some(getEnv(key)) != "") {
         return getEnv(key).getOrThrow()
     }
     return defaultValue
 }
 
 public func envStrs(key: String, separator: String, defaultValue: ArrayList<String>): ArrayList<String> {
-    if(getEnv(key).isNone() || Some(getEnv(key)) == ""){
+    if (getEnv(key).isNone() || Some(getEnv(key)) == "") {
         return defaultValue
     }
     let envList = ArrayList<String>()
@@ -119,7 +119,6 @@ public func envFloat64(key: String, defaultValue: Float64): Float64 {
         return defaultValue
     }
 }
-
 
 public func envBool(key: String, defaultValue: Bool): Bool {
     let trueList = Array<String>(["t", "T", "true", "TRUE", "1"])

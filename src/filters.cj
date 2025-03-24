@@ -29,7 +29,7 @@ public func onlyLetters(sequence: String): String {
         return ""
     }
     let letters = ArrayList<String>([])
-    sequence.toRuneArray() |> filter {i => i.isLetter() } |> forEach<Rune> {i => letters.append(i.toString())}
+    sequence.toRuneArray() |> filter {i => i.isLetter()} |> forEach<Rune> {i => letters.append(i.toString())}
     return String.join(letters.toArray())
 }
 

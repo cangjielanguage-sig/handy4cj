@@ -47,7 +47,7 @@ public func tif(condition: Bool, tifThen: Any, tifElse: Any): Any {
 
 // truncate 限制给定字符串的长度，根据参数决定是否修剪
 public func truncate(s: String, maxLen: Int64, trim: Bool): String {
-    if(s == ""){
+    if (s == "") {
         return s
     }
     return match (trim) {

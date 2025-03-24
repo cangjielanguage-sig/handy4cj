@@ -42,10 +42,10 @@ const TransformFlagRemoveDigits: UInt = 512
 
 // TODO
 // 实现对字符串标题化
-public func title(s: String):String{
+public func title(s: String): String {
     var prev = " "
     let result = ArrayList<Rune>([])
-    for (i in s.toRuneArray()){
+    for (i in s.toRuneArray()) {
         match (prev.isBlank()) {
             case true => result.append(i.toTitleCase())
             case false => result.append(i)

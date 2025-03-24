@@ -40,6 +40,21 @@ const TransformFlagTitleCase: UInt = 256
 // 如果与 TransformFlagOnlyLettersAndDigits、TransformFlagOnlyDigits 或 TransformFlagOnlyLetters 组合使用，则无效
 const TransformFlagRemoveDigits: UInt = 512
 
+// TODO
+// 实现对字符串标题化
+public func title(s: String):String{
+    var prev = " "
+    let result = ArrayList<Rune>([])
+    for (i in s.toRuneArray()){
+        match (prev.isBlank()) {
+            case true => result.append(i.toTitleCase())
+            case false => result.append(i)
+        }
+        prev = i.toString()
+    }
+    return String(result.toArray())
+}
+
 // transform 根据给定的标志/参数处理字符串，具体如下：
 // 转换操作是按任意顺序进行的，这可能导致意外的输出。如果输入很重要，请使用 TransformSerially。
 // 如果 maxLen == 0，则跳过截断。
@@ -51,9 +66,7 @@ public func transform(s: String, maxLen: Int64, transformFlags: UInt): String {
 
     var result = s
     if ((transformFlags & TransformNone) == TransformNone) {
-        let resultSlice = ArrayList<String>([])
-        result.toRuneArray() |> take<Rune>(maxLen) |> forEach<Rune> {i => resultSlice.append(i.toString())}
-        return String.join(resultSlice.toArray())
+        return String(result.toRuneArray().slice(0, maxLen))
     }
 
     if ((transformFlags & TransformFlagOnlyLettersAndDigits) == TransformFlagOnlyLettersAndDigits) {
@@ -76,25 +89,8 @@ public func transform(s: String, maxLen: Int64, transformFlags: UInt): String {
         result = result.trimAscii()
     }
 
-    // TODO
-    // toAsciiTitle 函数只能将Ascii字符组成的字符串标题化
-    // std.unicode.* 包里面的 toTitle 是把所有能标题化的字符标题化，不管是不是首字母都转化成了大写
     if ((transformFlags & TransformFlagTitleCase) == TransformFlagTitleCase) {
-        match (result.toRuneArray() |> all {i => i.isAscii()}) {
-            case true => result = result.toLower().toAsciiTitle()
-            case false =>
-                var inWord = false
-                for (i in result.toRuneArray()) {
-                    match (i.toString().isBlank()) {
-                        case true => inWord = false
-                        case false => 
-                            if(!inWord){
-                                result = result.replace(i.toString(), i.toString().toUpper())
-                                inWord = true
-                            }
-                    }
-                }
-        }
+        result = title(result.toLower())
     }
 
     if ((transformFlags & TransformFlagUpperCase) == TransformFlagUpperCase) {
@@ -114,9 +110,7 @@ public func transform(s: String, maxLen: Int64, transformFlags: UInt): String {
     }
 
     if (result.toRuneArray().size > maxLen && maxLen > 0) {
-        let resultSlice = ArrayList<String>([])
-        result.toRuneArray() |> take<Rune>(maxLen) |> forEach<Rune> {i => resultSlice.append(i.toString())}
-        result = String.join(resultSlice.toArray())
+        result = String(result.toRuneArray().slice(0, maxLen))
     }
 
     if ((transformFlags & TransformFlagTrim) == TransformFlagTrim) {
@@ -136,7 +130,6 @@ public func transformSerially(s: String, maxLen: Int, transformFlags: Array<UInt
     }
 
     var result = s
-    var hash = false
     for (flag in transformFlags) {
         if ((flag & TransformFlagOnlyLettersAndDigits) == TransformFlagOnlyLettersAndDigits) {
             result = onlyLettersAndNumbers(result)
@@ -158,23 +151,8 @@ public func transformSerially(s: String, maxLen: Int, transformFlags: Array<UInt
             result = result.trimAscii()
         }
 
-        // TODO 同上
         if ((flag & TransformFlagTitleCase) == TransformFlagTitleCase) {
-            match (result.toRuneArray() |> all {i => i.isAscii()}) {
-            case true => result = result.toLower().toAsciiTitle()
-            case false =>
-                var inWord = false
-                for (i in result.toRuneArray()) {
-                    match (i.toString().isBlank()) {
-                        case true => inWord = false
-                        case false => 
-                            if(!inWord){
-                                result = result.replace(i.toString(), i.toString().toUpper())
-                                inWord = true
-                            }
-                    }
-                }
-            }
+            result = title(result.toLower())
         }
 
         if ((flag & TransformFlagUpperCase) == TransformFlagUpperCase) {
@@ -186,18 +164,12 @@ public func transformSerially(s: String, maxLen: Int, transformFlags: Array<UInt
         }
 
         if ((flag & TransformFlagHash) == TransformFlagHash) {
-            hash = true
+            result = stringHash(result)
         }
     }
 
-    if (hash) {
-        result = stringHash(result)
-    }
-
     if (maxLen > 0 && result.toRuneArray().size > maxLen) {
-        let resultSlice = ArrayList<String>([])
-        result.toRuneArray() |> take<Rune>(maxLen) |> forEach<Rune> {i => resultSlice.append(i.toString())}
-        result = String.join(resultSlice.toArray())
+        result = String(result.toRuneArray().slice(0, maxLen))
     }
 
     return result

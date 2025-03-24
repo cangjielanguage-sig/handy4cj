@@ -92,7 +92,7 @@ public class TestTransform {
                 20, TransformFlagHash), "e0b10702c3efa47b748c")
         @Expect(transformSerially(
                 "The Cj is the 1º programming language is an open source project to make programmers more productive.",
-                20, TransformFlagHash, TransformFlagOnlyLetters), "c236e532cf9072177cec")
+                20, TransformFlagHash, TransformFlagOnlyLetters), "ebcefabcfbfecadeeaec")
         @Expect(transformSerially(" ", 1, TransformFlagOnlyLettersAndDigits, TransformFlagOnlyLetters, TransformFlagOnlyDigits,
                 TransformFlagOnlyLetters, TransformFlagTrim, TransformFlagLowerCase, TransformFlagUpperCase), "")
         @Expect(transformSerially(
@@ -100,7 +100,7 @@ public class TestTransform {
                 TransformFlagTrim, TransformFlagLowerCase), "the cj programming l")
         @Expect(transformSerially(
                 "The Cj is the 1º programming language is an open source project to make programmers more productive.",
-                20, TransformFlagHash, TransformFlagOnlyDigits), "6b86b273ff34fce19d6b")
+                20, TransformFlagHash, TransformFlagOnlyDigits), "01070234774814327906")
         @Expect(transformSerially(
                 "   The Cj programming language is an open source project to make programmers more productive.", 20,
                 TransformFlagTrim, TransformFlagLowerCase, TransformFlagHash), "e9b36d33b93d28c28ffe")

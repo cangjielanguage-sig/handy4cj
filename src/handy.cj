@@ -47,11 +47,12 @@ public func tif(condition: Bool, tifThen: Any, tifElse: Any): Any {
 
 // truncate 限制给定字符串的长度，根据参数决定是否修剪
 public func truncate(s: String, maxLen: Int64, trim: Bool): String {
-    let resultSlice = ArrayList<String>([])
-    s.toRuneArray() |> take<Rune>(maxLen) |> forEach<Rune> {i => resultSlice.append(i.toString())}
+    if(s == ""){
+        return s
+    }
     return match (trim) {
-        case false => String.join(resultSlice.toArray())
-        case true => String.join(resultSlice.toArray()).trimAscii()
+        case false => String(s.toRuneArray().slice(0, maxLen))
+        case true => String(s.toRuneArray().slice(0, maxLen)).trimAscii()
     }
 }
 
@@ -78,15 +79,13 @@ public func hasOnlyLetters(sequence: String): Bool {
 
 // trimLen 返回修剪掉空格后的字符数量
 public func trimLen(text: String): Int64 {
-    let newText = text.trimAscii()
-    return newText.toRuneArray().size
+    return text.trimAscii().toRuneArray().size
 }
 
 // checkMinLen 验证字符数是否大于或等于给定的最小值
 // 如果给定的字符串长度大于或等于 minLength 参数，则返回 true
 public func checkMinLen(value: String, minLength: Int64): Bool {
-    let newValue = value.trimAscii()
-    return newValue.size >= minLength
+    return value.trimAscii().size >= minLength
 }
 
 // isNumericType 检查参数的具体类型是否对应原生数值类型
@@ -128,6 +127,12 @@ public func reverseString(s: String): String {
     if (s.toRuneArray().size < 2) {
         return s
     }
+    // TODO
+    // 这个函数是要把一个字符串反转
+    // s.toRuneArray().reverse 函数返回值是Unit
+    // 用 toString() 函数返回的值，没有去掉[]和逗号
+    // String() 需要传递字符数组
+    // as 转换之后返回 None
     let reverseStr = ArrayList<String>([])
     var i = s.toRuneArray().size - 1
     while (i >= 0) {
@@ -142,6 +147,9 @@ public func stringReplaceAll(original: String, replacementParis: Array<String>):
     if (replacementParis.size % 2 != 0) {
         throw Exception("The number of elements in replacementParis should be even")
     }
+    // TODO
+    // 这个函数的目的是传递变长参数，持续替换目标字符串
+    // go语言中有一个函数可以直接接受变长参数在进行替换
     var result = original
     for (i in 0..replacementParis.size / 2) {
         result = result.replace(replacementParis[2 * i], replacementParis[2 * i + 1])

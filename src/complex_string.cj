@@ -164,7 +164,10 @@ public func checkStr(seq: String, minLen: UIntNative, maxLen: UIntNative, rules:
         return checkStrSymbolsDenied
     }
 
-    // 判断字符串是否多于一个单词，按照空白字符进行切割
+    // TODO
+    // 想要判断字符串是否多于一个单词，按照空白字符进行切割
+    // split() 函数只能传递一个字符串，这个函数按照这个字符串进行切割
+    // 如果传递空格，那么在字符串中出现 \t\n 等就不能进行切割
     var containsMoreThanOneWord = 0
     var inWord = false
     for (i in seq.toRuneArray()) {

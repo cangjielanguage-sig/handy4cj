@@ -31,11 +31,9 @@ public func debugLog(msg: String, debugPrint: Bool) {
 
 // envCheck 测试环境变量
 public func envCheck(varName: String, defaultValue: String, mandatory: Bool, debugPrint: Bool) {
-    if (!getEnv(varName).isNone()) {
-        if (Some(getEnv(varName)) != "") {
-            debugLog("environment variable " + varName + " asserted", debugPrint)
-            return ""
-        }
+    if (!getEnv(varName).isNone() && Some(getEnv(varName)) != "") {
+        debugLog("environment variable " + varName + " asserted", debugPrint)
+        return ""
     }
     if (defaultValue != "") {
         try {
@@ -53,26 +51,18 @@ public func envCheck(varName: String, defaultValue: String, mandatory: Bool, deb
 }
 
 public func envStr(key: String, defaultValue: String): String {
-    match (getEnv(key)) {
-        case None => return defaultValue
-        case Some(v) =>
-            if (v == "") {
-                return defaultValue
-            }
-            return v
+    if(!getEnv(key).isNone() && Some(getEnv(key)) != ""){
+        return getEnv(key).getOrThrow()
     }
+    return defaultValue
 }
 
 public func envStrs(key: String, separator: String, defaultValue: ArrayList<String>): ArrayList<String> {
-    let envList = ArrayList<String>()
-    match (getEnv(key)) {
-        case None => return defaultValue
-        case Some(v) =>
-            if (v == "") {
-                return defaultValue
-            }
-            v.split(separator, removeEmpty: false) |> forEach<String>(envList.append)
+    if(getEnv(key).isNone() || Some(getEnv(key)) == ""){
+        return defaultValue
     }
+    let envList = ArrayList<String>()
+    getEnv(key).getOrThrow().split(separator, removeEmpty: false) |> forEach<String>(envList.append)
     return envList
 }
 
@@ -129,6 +119,7 @@ public func envFloat64(key: String, defaultValue: Float64): Float64 {
         return defaultValue
     }
 }
+
 
 public func envBool(key: String, defaultValue: Bool): Bool {
     let trueList = Array<String>(["t", "T", "true", "TRUE", "1"])

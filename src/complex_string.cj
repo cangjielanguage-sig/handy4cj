@@ -119,6 +119,8 @@ const checkStrUpperCaseNotFound: Int8 = -17
 // CheckStrLowercaseNotFound 没有找到小写字母时返回此值
 const checkStrLowercaseNotFound: Int8 = -18
 
+let blankFinder = Regex("\\s+")
+
 public func checkStr(seq: String, minLen: UIntNative, maxLen: UIntNative, rules: UInt64): Int8 {
     let strLen = UIntNative(seq.toRuneArray().size)
 
@@ -164,22 +166,7 @@ public func checkStr(seq: String, minLen: UIntNative, maxLen: UIntNative, rules:
         return checkStrSymbolsDenied
     }
 
-    // TODO
-    // 想要判断字符串是否多于一个单词，按照空白字符进行切割
-    // split() 函数只能传递一个字符串，这个函数按照这个字符串进行切割
-    // 如果传递空格，那么在字符串中出现 \t\n 等就不能进行切割
-    var containsMoreThanOneWord = 0
-    var inWord = false
-    for (i in seq.toRuneArray()) {
-        if (i.toString().isBlank()) {
-            inWord = false
-        } else {
-            if (!inWord) {
-                containsMoreThanOneWord++
-                inWord = true
-            }
-        }
-    }
+    let containsMoreThanOneWord = Matcher(blankFinder, seq).allCount() + 1
     if (((rules & checkStrDenyMoreThanOneWord) == checkStrDenyMoreThanOneWord) && containsMoreThanOneWord > 1) {
         return checkStrMoreThanOneWordDenied
     }

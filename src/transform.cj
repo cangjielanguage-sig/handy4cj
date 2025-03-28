@@ -40,8 +40,7 @@ const TransformFlagTitleCase: UInt = 256
 // 如果与 TransformFlagOnlyLettersAndDigits、TransformFlagOnlyDigits 或 TransformFlagOnlyLetters 组合使用，则无效
 const TransformFlagRemoveDigits: UInt = 512
 
-// TODO
-// 实现对字符串标题化
+// title 对字符串标题化
 public func title(s: String): String {
     var prev = " "
     let result = ArrayList<Rune>([])

@@ -127,19 +127,9 @@ public func reverseString(s: String): String {
     if (s.toRuneArray().size < 2) {
         return s
     }
-    // TODO
-    // 这个函数是要把一个字符串反转
-    // s.toRuneArray().reverse 函数返回值是Unit
-    // 用 toString() 函数返回的值，没有去掉[]和逗号
-    // String() 需要传递字符数组
-    // as 转换之后返回 None 
-    let reverseStr = ArrayList<String>([])
-    var i = s.toRuneArray().size - 1
-    while (i >= 0) {
-        reverseStr.append(s.toRuneArray()[i].toString())
-        i--
-    }
-    return String.join(reverseStr.toArray())
+    let reverseStr = s.toRuneArray()
+    reverseStr.reverse()
+    return String(reverseStr)
 }
 
 // stringReplaceAll 持续替换，直到没有更多的替换项。
@@ -147,9 +137,6 @@ public func stringReplaceAll(original: String, replacementParis: Array<String>):
     if (replacementParis.size % 2 != 0) {
         throw Exception("The number of elements in replacementParis should be even")
     }
-    // TODO
-    // 这个函数的目的是传递变长参数，持续替换目标字符串
-    // go语言中有一个函数可以直接接受变长参数在进行替换
     var result = original
     for (i in 0..replacementParis.size / 2) {
         result = result.replace(replacementParis[2 * i], replacementParis[2 * i + 1])

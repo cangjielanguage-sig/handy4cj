@@ -132,7 +132,7 @@ public func reverseString(s: String): String {
     // s.toRuneArray().reverse 函数返回值是Unit
     // 用 toString() 函数返回的值，没有去掉[]和逗号
     // String() 需要传递字符数组
-    // as 转换之后返回 None
+    // as 转换之后返回 None 
     let reverseStr = ArrayList<String>([])
     var i = s.toRuneArray().size - 1
     while (i >= 0) {

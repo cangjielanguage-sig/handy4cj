@@ -17,10 +17,8 @@ public func randomInt(min: Int, max: Int): Int {
 
 public func randomIntArray(min: Int, max: Int, howMany: Int): ArrayList<Int> {
     let result = ArrayList<Int>([])
-    var i = 0
-    while (i < howMany) {
+    while (result.size < howMany) {
         result.append(randomInt(min, max))
-        i++
     }
     return result
 }

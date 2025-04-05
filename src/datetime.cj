@@ -58,14 +58,14 @@ public func checkDateYMD(yyyyMMdd: String): Bool {
 
 // YMDasDateUTC 将给定的 yyyyMMdd 格式输入转换为有效的 UTC 时间
 public func YMDasDateUTC(yyyyMMdd: String, utc: Bool): DateTime {
-    try{
+    try {
         var dateTime = DateTime.parse(yyyyMMdd)
         return match (utc) {
             case false => dateTime
             case true => DateTime.of(year: dateTime.year, month: dateTime.month, dayOfMonth: dateTime.dayOfMonth,
                 timeZone: TimeZone.UTC)
         }
-    }catch (e: TimeParseException) {
+    } catch (e: TimeParseException) {
         throw TimeParseException()
     }
 }
@@ -163,27 +163,25 @@ public func monthLastDay(year: Int, month: Int): Int {
 
 // dateReformat 将一个日期字符串从给定的 currentFormat 格式转换为新的 newFormat 格式
 public func dateReformat(dt1: String, currentFormat: String, newFormat: String): String {
-    try{
+    try {
         let dx = stringAsDateTime(dt1, currentFormat)
         return match (dx == DateTime.UnixEpoch) {
             case false => dateTimeAsString(dx, newFormat)
             case true => ""
         }
-    }catch (e: TimeParseException) {
+    } catch (e: TimeParseException) {
         return ""
     }
-    
 }
 
 // dateStrCheckOk 表示结果是正确的
-const dateStrCheckOk :UInt8 = 0
+const dateStrCheckOk: UInt8 = 0
 // dateStrCheckErrInvalid 表示日期无效
-const dateStrCheckErrInvalid :UInt8 = 1
+const dateStrCheckErrInvalid: UInt8 = 1
 // dateStrCheckErrOutOfRange 表示日期超出了支持的范围
-const dateStrCheckErrOutOfRange :UInt8 = 2
+const dateStrCheckErrOutOfRange: UInt8 = 2
 // dateStrCheckErrEmpty 表示日期字符串为空
-const dateStrCheckErrEmpty :UInt8 = 3
-
+const dateStrCheckErrEmpty: UInt8 = 3
 
 // dateStrCheckAge 检查一个日期字符串，考虑最小年龄和最大年龄
 public func dateStrCheckAge(date: String, format: String, yearsAgeMin: Int, yearsAgeMax: Int, acceptEmpty: Bool): UInt8 {
@@ -194,7 +192,7 @@ public func dateStrCheckAge(date: String, format: String, yearsAgeMin: Int, year
         }
     }
 
-    try{
+    try {
         let dt = stringAsDateTime(date, format)
         if (dt == DateTime.UnixEpoch) {
             return dateStrCheckErrInvalid
@@ -202,7 +200,7 @@ public func dateStrCheckAge(date: String, format: String, yearsAgeMin: Int, year
         if (!between(yearsAge(dt), yearsAgeMin, yearsAgeMax)) {
             return dateStrCheckErrOutOfRange
         }
-    }catch (e: TimeParseException) {
+    } catch (e: TimeParseException) {
         return dateStrCheckErrInvalid
     }
 
@@ -218,7 +216,7 @@ public func dateStrCheckRange(date: String, format: String, dateMin: DateTime, d
         }
     }
 
-    try{
+    try {
         let dt = stringAsDateTime(date, format)
         if (dt == DateTime.UnixEpoch) {
             return dateStrCheckErrInvalid
@@ -226,7 +224,7 @@ public func dateStrCheckRange(date: String, format: String, dateMin: DateTime, d
         if ((dateMin != DateTime.UnixEpoch && dt < dateMin) || (dateMax != DateTime.UnixEpoch && dt > dateMax)) {
             return dateStrCheckErrOutOfRange
         }
-    }catch (e: TimeParseException) {
+    } catch (e: TimeParseException) {
         return dateStrCheckErrInvalid
     }
     return dateStrCheckOk

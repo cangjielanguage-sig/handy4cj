@@ -1,4 +1,4 @@
 version = 0
 
 [requires]
-  cangjie_toml = {commitId = "2b8d099611baf0d2ce91f8c5690f89a497ea0600", git = "https://gitcode.com/PermissionDog/cangjie_toml.git"}
+  cangjie_toml = {commitId = "2b8d099611baf0d2ce91f8c5690f89a497ea0600", git = "https://gitcode.com/PermissionDog/cangjie_toml.git"} 

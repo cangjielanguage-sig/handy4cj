@@ -25,13 +25,7 @@ public func randomNumericString(forbiddenDogits: ArrayList<Int>, lengthMin: Int,
     if (forbiddenDogits.size > 0) {
         forbiddenDogits |> forEach<Int> {i => allowedDigits[i] = false}
         let remainingAllowed = ArrayList<Int>([])
-        // TODO
-        // 筛选出在allowedDigits值为ture的键值对
-        // allowedDigits |> filterMap{i:Int64 => allowedDigits[i]} |> forEach(remainingAllowed.append)
-        for ((key, value) in allowedDigits where allowedDigits[key]) {
-            remainingAllowed.append(key)
-        }
-
+        allowedDigits |> filter {p => p[1]} |> forEach{p => remainingAllowed.append(p[0])}  
         if (remainingAllowed.size == 0) {
             return ""
         } else if (remainingAllowed.size == 1) {

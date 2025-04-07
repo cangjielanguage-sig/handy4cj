@@ -6,6 +6,9 @@ import std.fs.*
 import std.os.*
 import std.unittest.*
 import std.unittest.testmacro.*
+internal import serialization.serialization.*
+internal import std.fs.Path as LocalPath
+internal import cangjie_toml.cangjie_toml.*
 
 public class TestEnvCheckDemo {
     let title: String
@@ -134,6 +137,75 @@ public class TestEnvLoadFromDiskDemo {
     public init(envVar: String, assertion: String) {
         this.envVar = envVar
         this.assertion = assertion
+    }
+}
+
+public func getRootPath(path: String, module!: String = ""): LocalPath {
+    if (module == "") {
+        return LocalPath(path)
+    }
+
+    try {
+        return getCjpmPath(module, path)
+    } catch (_: Exception) {
+        return LocalPath(path)
+    }
+}
+
+func getCjpmPath(module: String, path: String): LocalPath {
+    let cjpmLock = DataModel.fromTomlFile("cjpm.lock") |> CjpmLock.deserialize
+    let commitId = cjpmLock.requires[module].commitId
+    return homeDir()
+        .info
+        .path
+        .join(".cjpm")
+        .join("git")
+        .join(module)
+        .join(commitId)
+        .join(path)
+}
+
+class CjpmLock <: Serializable<CjpmLock> {
+    public CjpmLock(
+        public var version: Int64,
+        public var requires: HashMap<String, Require>
+    ) {}
+
+    public func serialize(): DataModel {
+        return DataModelStruct().add(field("version", version)).add(field("requires", requires))
+    }
+
+    public static func deserialize(dm: DataModel): CjpmLock {
+        let dms = match (dm) {
+            case d: DataModelStruct => d
+            case _ => throw Exception("this data is not DataModelStruct")
+        }
+        return CjpmLock(
+            Int64.deserialize(dms.get("version")),
+            HashMap<String, Require>.deserialize(dms.get("requires"))
+        )
+    }
+}
+
+class Require <: Serializable<Require> {
+    public Require(
+        public var commitId: String,
+        public var git: String
+    ) {}
+
+    public func serialize(): DataModel {
+        return DataModelStruct().add(field<String>("commitId", commitId)).add(field<String>("git", git))
+    }
+
+    public static func deserialize(dm: DataModel): Require {
+        let dms = match (dm) {
+            case d: DataModelStruct => d
+            case _ => throw Exception("this data is not DataModelStruct")
+        }
+        return Require(
+            String.deserialize(dms.get("commitId")),
+            String.deserialize(dms.get("git"))
+        )
     }
 }
 
@@ -332,7 +404,7 @@ public class TestEnv {
                 TestEnvLoadFromDiskDemo("INVALIDXX2", "")
             ]
         )
-        envLoadFromDisk(currentDir().info.path.join("env_test.txt").toString(), true, true)
+        envLoadFromDisk(getRootPath("env_test.txt").toString(), true, true)
         for (i in testList) {
             match (getEnv(i.envVar)) {
                 case None => @Expect("", i.assertion)

@@ -5,7 +5,6 @@
 <p align="center">
 <img alt="" src="https://img.shields.io/badge/release-v1.0.0-brightgreen" style="display: inline-block;" />
 <img alt="" src="https://img.shields.io/badge/cjc-v0.53.18-brightgreen" style="display: inline-block;" />
-<img alt="" src="https://img.shields.io/badge/cjcov-100.0%25-brightgreen" style="display: inline-block;" />
 <img alt="" src="https://img.shields.io/badge/state-孵化-brightgreen" style="display: inline-block;" />
 </p>
 

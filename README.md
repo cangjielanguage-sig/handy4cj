@@ -81,9 +81,14 @@ handy4cj是一个基于仓颉的实用程序和助手，如验证器、清理器
 主要类和函数接口说明，详见 [API](./doc/feature_api.md)
 
 ## 使用说明
-### 编译构建
+### 依赖引入
 
-描述具体的编译过程：
+```shell
+[dependencies]
+    handy4cj = { git = "https://gitcode.com/Bayonet/handy4cj.git" }
+```
+
+### 编译构建
 
 ```shell
 cjpm update

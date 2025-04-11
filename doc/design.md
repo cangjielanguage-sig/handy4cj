@@ -1,22 +1,22 @@
 # handy4cj库设计介绍
 
 ## 描述
-    handy4cj是一个基于仓颉的实用程序和助手，如验证器、清理器和字符串格式化程序。
-    本文档详细介绍handy4cj的API设计、架构设计和使用示例
+handy4cj是一个基于仓颉的实用程序和助手，如验证器、清理器和字符串格式化程序。
+本文档详细介绍handy4cj的API设计、架构设计和使用示例
 
 ## API设计
 
 ### array
-    提供计算差集和对称差集的功能
-### API
+提供计算差集和对称差集的功能
+#### API
 ```cangjie
 public func arrayDifferenceAtoB(a: ArrayList<Int64>, b: ArrayList<Int64>): ArrayList<Int64>
 public func arrayDifference(a: ArrayList<Int64>, b: ArrayList<Int64>): ArrayList<Int64>
 ```
 
 ### complex_string
-    提供对字符串的格式进行检查的功能
-### API
+提供对字符串的格式进行检查的功能
+#### API
 ```cangjie
 public func hasNumber(s: String): Bool
 public func hasNumber(s: String): Bool
@@ -26,16 +26,16 @@ public func strContainsEmail(seq: String): Bool
 ```
 
 ### convert
-    提供字符串向 Float64、Int64 转换的功能
-### API
+提供字符串向 Float64、Int64 转换的功能
+#### API
 ```cangjie
 public func stringAsFloat(s: String, decimalSeparator: Rune, thousandsSeparator: Rune): Float64
 public func stringAsInteger(s: String): Int64
 ```
 
 ### dateTime
-    提供日期与字符串之间的转化、验证日期格式与字符串格式有效性、计算两个日期之间差值的功能
-### API
+提供日期与字符串之间的转化、验证日期格式与字符串格式有效性、计算两个日期之间差值的功能
+#### API
 ```cangjie
 public func dateTimeAsString(dt: DateTime, format: String): String
 public func nowAsString(format: String): String
@@ -57,15 +57,15 @@ public func dateStrCheckAge(date: String, format: String, yearsAgeMin: Int, year
 ```
 
 ### email
-    提供遵循RFC 2822标准格式的电子邮件验证的功能
-### API
+提供遵循RFC 2822标准格式的电子邮件验证的功能
+#### API
 ```cangjie
 public func checkEmail(email: String): Bool
 ```
 
 ### env
-    提供验证环境变量变量、从文件中加载需要设置的环境变量的功能
-### API
+提供验证环境变量变量、从文件中加载需要设置的环境变量的功能
+#### API
 ```cangjie
 public class EnvChecker {
     let varName: String
@@ -87,8 +87,8 @@ public func envLoadFromDisk(fileName: String, mustHave: Bool, overwriteValues: B
 ```
 
 ### filter
-    提供处理空白字符、提取特殊字符的功能
-### API
+提供处理空白字符、提取特殊字符的功能
+#### API
 ```cangjie
 public func dedupSpaces(s: String): String
 public func cleanSpaces(s: String): String
@@ -99,8 +99,8 @@ public func removeDigits(sequeue: String): String
 ```
 
 ### handy
-    提供一些基础的验证器、处理器操作，供其他函数使用
-### API
+提供一些基础的验证器、处理器操作，供其他函数使用
+#### API
 ```cangjie
 public func runeHasSymbol(ru: Rune): Bool
 public func stringHash(s: String): String
@@ -122,8 +122,8 @@ public func positiveOrZero(n: Int64): Int64
 ```
 
 ### inarray
-    提供将任意类型整数转换为BigInt类型、通过BigInt进行跨类型检查的功能
-### API
+提供将任意类型整数转换为BigInt类型、通过BigInt进行跨类型检查的功能
+#### API
 ```cangjie
 public func intToBigint(i: Any): BigInt
 public func inArrayIntFlex(item: ?Any, array: ?Any): Bool
@@ -131,8 +131,8 @@ public func inArray(array: ?Any, item: ?Any): Bool
 ```
 
 ### name
-    提供对人名进行验证以及一些常规操作的功能
-### API
+提供对人名进行验证以及一些常规操作的功能
+#### API
 ```cangjie
 public func dedupSpaces(s: String): String
 public func cleanSpaces(s: String): String
@@ -143,8 +143,8 @@ public func removeDigits(sequeue: String): String
 ```
 
 ### filter
-    提供处理空白字符、提取特殊字符的功能
-### API
+提供处理空白字符、提取特殊字符的功能
+#### API
 ```cangjie
 public func checkPersonName(name: String, acceptEmpty: Bool): UInt8
 public func nameFirstAndLast(name: String, transformFlags: UInt): String
@@ -153,22 +153,22 @@ public func nameInitials(name: String, transformFlags: UInt): String
 ```
 
 ### password
-    提供对密码进行合规性检查的功能
-### API
+提供对密码进行合规性检查的功能
+#### API
 ```cangjie
 public func checkNewPassword(password: String, passwordConfirmation: String, minimumLength: UInt, flagComplexity: UInt8): UInt8
 ```
 
 ### random_numeric_string
-    提供随机生成数字字符串的功能
-### API
+提供随机生成数字字符串的功能
+#### API
 ```cangjie
 public func randomNumericString(forbiddenDigits: ArrayList<Int>, lengthMin: Int, lengthMax: Int): String
 ```
 
 ### random_string
-    提供根据指定格式随机生成字符串的功能
-### API
+提供根据指定格式随机生成字符串的功能
+#### API
 ```cangjie
 public func isSymbol(r: Rune): Bool
 public func randomString(minLen: Int, maxLen: Int, allowUnicode: Bool, allowNumbers: Bool, allowSymbols: Bool,
@@ -176,8 +176,8 @@ public func randomString(minLen: Int, maxLen: Int, allowUnicode: Bool, allowNumb
 ```
 
 ### random
-    提供初始化随机数生成器与生成指定范围的随机数的功能
-### API
+提供初始化随机数生成器与生成指定范围的随机数的功能
+#### API
 ```cangjie
 public func initRandom(): Random
 public func randomInt(min: Int, max: Int): Int
@@ -186,8 +186,8 @@ public func randomReseed(min: Int, max: Int): Int
 ```
 
 ### reshape
-    提供使用占位符格式化字符串的功能
-### API
+提供使用占位符格式化字符串的功能
+#### API
 ```cangjie
 public func reshapePH(placeHolder: Rune, format: String, sequence: String): String
 public func reshape(format: String, sequence: String): String
@@ -195,8 +195,8 @@ public func transformSerially(s: String, maxLen: Int, transformFlags: Array<UInt
 ```
 
 ### transform
-    提供根据各种规则对字符串进行转换的功能
-### API
+提供根据各种规则对字符串进行转换的功能
+#### API
 ```cangjie
 public func title(s: String): String
 public func transform(s: String, maxLen: Int64, transformFlags: UInt): String

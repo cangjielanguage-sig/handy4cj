@@ -1,11 +1,11 @@
 [
     {
-        "Name": " handy4cj",
+        "Name": " handy",
         "License": " MIT License ",
         "License File": " LICENSE ",
         "Version Number": " v1.0.0 ",
-        "Owner": "马鸣阳"
-        "Upstream URL": "https://gitcode.com/Bayonet/handy4cj",
-        "Description": "基于仓颉的一个实用程序和助手，如验证器、清理器和字符串格式化程序等"
+        "Owner": "miguelpragier",
+        "Upstream URL": "https://github.com/miguelpragier/handy",
+        "Description": "GO Golang Utilities and helpers like validators, sanitizers and string formatters"
     }
 ]

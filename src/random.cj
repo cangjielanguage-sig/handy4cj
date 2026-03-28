@@ -22,6 +22,7 @@ public func randomIntArray(min: Int, max: Int, howMany: Int): ArrayList<Int> {
     return result
 }
 
+@OverflowWrapping
 public func randomReseed(min: Int, max: Int): Int {
     let random = initRandom()
     let reseededRandom = Random(random.seed + random.nextUInt64())

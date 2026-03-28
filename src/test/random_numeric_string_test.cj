@@ -24,16 +24,14 @@ public class TestRandomNumericStringDemo {
 public class TestRandomNumericString {
     @TestCase
     public func test_random_numeric_string() {
-        let testList = Array<TestRandomNumericStringDemo>(
-            [
+        let testList = [
                 TestRandomNumericStringDemo("zero length string", ArrayList<Int>(), 0, 0, ""),
                 TestRandomNumericStringDemo("all digits forbidden, min length = max length = 3",
-                    ArrayList<Int>(0, 1, 2, 3, 4, 5, 6, 7, 8, 9), 3, 3, ""),
+                    ArrayList<Int>([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]), 3, 3, ""),
                 TestRandomNumericStringDemo("max length less than min length", ArrayList<Int>(), 5, 3, ""),
                 TestRandomNumericStringDemo("only one digit is allowed", ArrayList<Int>([0, 1, 2, 3, 4, 5, 6, 7, 8]), 3,
                     3, "999")
             ]
-        )
         testList |>
             forEach<TestRandomNumericStringDemo> {
             i => @Assert(randomNumericString(i.forbiddenDigits, i.lengthMin, i.lengthMax), i.expectedOutput)

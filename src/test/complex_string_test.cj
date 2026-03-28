@@ -40,8 +40,7 @@ public class TestStrContainsEmailDemo {
 public class TestComplexString {
     @TestCase
     public func test_checkStr() {
-        let testList = Array<TestCheckStrDemo>(
-            [
+        let testList = [
                 TestCheckStrDemo("perfect string",
                     "ЀЁЂЃЄЅІЇЈЉЊЋЌЍЎЏ АБВГДЕЖЗИЙКЛМНОП РСТУФХЦЧШЩЪЫ ЬЭЮЯ абвгдежзийкл мнопрстуфхцчшщ ъыьэюяѐёђѓєѕіїј љњћќѝўџѠѡѢѣѤѥѦѧѨѩѪѬѭѮѯ",
                     0, 118, 0, checkStrOk),
@@ -80,21 +79,18 @@ public class TestComplexString {
                 TestCheckStrDemo("missed lowercase", "ALL UPPERCASE 789", 0, 100, checkStrRequireLowercase,
                     checkStrLowercaseNotFound)
             ]
-        )
   
         testList |> forEach { i => @Expect(checkStr(i.input, i.minLen, i.maxLen, i.flags), i.expectedOutput)}
     }
 
     @TestCase
     public func test_strContainsEmail() {
-        let testList = Array<TestStrContainsEmailDemo>(
-            [
+        let testList = [
                 TestStrContainsEmailDemo("empty string", "", false),
                 TestStrContainsEmailDemo("no valid email", "email-gmail.com", false),
                 TestStrContainsEmailDemo("the string is an email address", "email@gmail.com", true),
                 TestStrContainsEmailDemo("valid email within", "dasdsdsdsda-*9email@gmail.comdsdsds.88", true)
             ]
-        )
 
         testList |> forEach {i => @Expect(strContainsEmail(i.input),i.expectedOutput)}
     }

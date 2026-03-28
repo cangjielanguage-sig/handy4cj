@@ -1,10 +1,10 @@
 package handy4cj
 
-import crypto.digest.*
-import encoding.hex.*
+import stdx.crypto.digest.*
+import stdx.encoding.hex.*
 import std.collection.*
 import std.core.*
-import std.format.*
+
 import std.regex.*
 import std.unicode.*
 
@@ -20,7 +20,7 @@ public func stringHash(s: String): String {
     let h = SHA256()
     try {
         h.write(s.toArray())
-    } catch (e: CryptoException) {
+    } catch (e: Exception) {
         return ""
     }
     return toHexString(h.finish())

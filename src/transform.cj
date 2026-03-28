@@ -43,11 +43,11 @@ const TransformFlagRemoveDigits: UInt = 512
 // title 对字符串标题化
 public func title(s: String): String {
     var prev = " "
-    let result = ArrayList<Rune>([])
+    let result = ArrayList<Rune>()
     for (i in s.toRuneArray()) {
         match (prev.isBlank()) {
-            case true => result.append(i.toTitleCase())
-            case false => result.append(i)
+            case true => result.add(i.toTitleCase())
+            case false => result.add(i)
         }
         prev = i.toString()
     }

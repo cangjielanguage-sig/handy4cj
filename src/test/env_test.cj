@@ -2,11 +2,11 @@ package handy4cj.test
 
 import handy4cj.*
 import std.collection.*
+import std.env.*
 import std.fs.*
-import std.os.*
 import std.unittest.*
 import std.unittest.testmacro.*
-internal import serialization.serialization.*
+internal import stdx.serialization.serialization.*
 internal import std.fs.Path as LocalPath
 internal import cangjie_toml.cangjie_toml.*
 
@@ -155,9 +155,7 @@ public func getRootPath(path: String, module!: String = ""): LocalPath {
 func getCjpmPath(module: String, path: String): LocalPath {
     let cjpmLock = DataModel.fromTomlFile("cjpm.lock") |> CjpmLock.deserialize
     let commitId = cjpmLock.requires[module].commitId
-    return homeDir()
-        .info
-        .path
+    return getHomeDirectory()
         .join(".cjpm")
         .join("git")
         .join(module)
@@ -213,177 +211,159 @@ class Require <: Serializable<Require> {
 public class TestEnv {
     @TestCase
     public func test_envCheck() {
-        let testList = Array<TestEnvCheckDemo>(
-            [
-                TestEnvCheckDemo("ENVALRIGHT", "X", "xyz", true, false),
-                TestEnvCheckDemo("ENVDOESNTEXIST", "X", "", false, true),
-                TestEnvCheckDemo("ENVEMPTYOPTIONAL", "", "xyz", false, true),
-                TestEnvCheckDemo("ENVMANDATORYWITHDEFAULT", "xyz", " ", true, true)
-            ]
-        )
+        let testList = [
+            TestEnvCheckDemo("ENVALRIGHT", "X", "xyz", true, false),
+            TestEnvCheckDemo("ENVDOESNTEXIST", "X", "", false, true),
+            TestEnvCheckDemo("ENVEMPTYOPTIONAL", "", "xyz", false, true),
+            TestEnvCheckDemo("ENVMANDATORYWITHDEFAULT", "xyz", " ", true, true)
+        ]
         testList |>
             forEach<TestEnvCheckDemo> {i => @Assert(envCheck(i.title, i.defaultValue, i.mandatory, i.debugLog), "")}
         @AssertThrows[Exception](envCheck("ENVEMPTYMANDATORY", "", true, true))
 
-        setEnv("TESTSETDONE", "done")
+        setVariable("TESTSETDONE", "done")
         @Assert(envCheck("TESTSETDONE", "", true, true), "")
-        setEnv("TESTSETEMPTYDONE", "")
+        setVariable("TESTSETEMPTYDONE", "")
         @AssertThrows[Exception](envCheck("TESTSETEMPTYDONE", "", true, true))
     }
 
     @TestCase
     public func test_envStr() {
-        let testList = Array<TestEnvStrDemo>(
-            [
-                TestEnvStrDemo("ENV_XYZ", "xyz", "", "xyz"),
-                TestEnvStrDemo("ENV_EMPTY", "", "", ""),
-                TestEnvStrDemo("ENV_EMPTYDEFAULT", "", "xyz", "xyz")
-            ]
-        )
-        testList |> forEach<TestEnvStrDemo> {i => setEnv(i.envVar, i.value)}
+        let testList = [
+            TestEnvStrDemo("ENV_XYZ", "xyz", "", "xyz"),
+            TestEnvStrDemo("ENV_EMPTY", "", "", ""),
+            TestEnvStrDemo("ENV_EMPTYDEFAULT", "", "xyz", "xyz")
+        ]
+        testList |> forEach<TestEnvStrDemo> {i => setVariable(i.envVar, i.value)}
         testList |> forEach<TestEnvStrDemo> {i => @Assert(envStr(i.envVar, i.defaultValue), i.assertion)}
     }
 
     @TestCase
     public func test_envStrs() {
-        let testList = Array<TestEnvStrsDemo>(
-            [
-                TestEnvStrsDemo("ENV_ABC", "a,b,c", ",", ArrayList<String>([]), ArrayList<String>(["a", "b", "c"])),
-                TestEnvStrsDemo("ENV_VALUEEMPTY", "", ",", ArrayList<String>(["a", "b", "c"]),
-                    ArrayList<String>(["a", "b", "c"])),
-                TestEnvStrsDemo("ENV_DEFAULTEMPTY", "", ",", ArrayList<String>([]), ArrayList<String>([]))
-            ]
-        )
-        testList |> forEach<TestEnvStrsDemo> {i => setEnv(i.envVar, i.value)}
+        let testList = [
+            TestEnvStrsDemo("ENV_ABC", "a,b,c", ",", ArrayList<String>(), ArrayList<String>(["a", "b", "c"])),
+            TestEnvStrsDemo("ENV_VALUEEMPTY", "", ",", ArrayList<String>(["a", "b", "c"]),
+                ArrayList<String>(["a", "b", "c"])),
+            TestEnvStrsDemo("ENV_DEFAULTEMPTY", "", ",", ArrayList<String>(), ArrayList<String>())
+        ]
+        testList |> forEach<TestEnvStrsDemo> {i => setVariable(i.envVar, i.value)}
         testList |> forEach<TestEnvStrsDemo> {i => @Assert(envStrs(i.envVar, i.separator, i.defaultValue), i.assertion)}
     }
 
     @TestCase
     public func test_envIntNative() {
-        let testList = Array<TestEnvIntNativeDemo>(
-            [
-                TestEnvIntNativeDemo("ENV_111", "111", 0, 111),
-                TestEnvIntNativeDemo("ENV_EMPTY", "", 0, 0),
-                TestEnvIntNativeDemo("ENV_ZERO", "0", 0, 0),
-                TestEnvIntNativeDemo("ENV_ZERODEFAULT", "", 0, 0),
-                TestEnvIntNativeDemo("ENV_555", "", 555, 555),
-                TestEnvIntNativeDemo("ENV_INVALID", "abc", 123, 123),
-                TestEnvIntNativeDemo("ENV_NEGATIVE", "-999", 0, -999),
-                TestEnvIntNativeDemo("ENV_LARGEVALUE", "9223372036854775807", 0, 9223372036854775807)
-            ]
-        )
-        testList |> forEach<TestEnvIntNativeDemo> {i => setEnv(i.envVar, i.value)}
+        let testList = [
+            TestEnvIntNativeDemo("ENV_111", "111", 0, 111),
+            TestEnvIntNativeDemo("ENV_EMPTY", "", 0, 0),
+            TestEnvIntNativeDemo("ENV_ZERO", "0", 0, 0),
+            TestEnvIntNativeDemo("ENV_ZERODEFAULT", "", 0, 0),
+            TestEnvIntNativeDemo("ENV_555", "", 555, 555),
+            TestEnvIntNativeDemo("ENV_INVALID", "abc", 123, 123),
+            TestEnvIntNativeDemo("ENV_NEGATIVE", "-999", 0, -999),
+            TestEnvIntNativeDemo("ENV_LARGEVALUE", "9223372036854775807", 0, 9223372036854775807)
+        ]
+        testList |> forEach<TestEnvIntNativeDemo> {i => setVariable(i.envVar, i.value)}
         testList |> forEach<TestEnvIntNativeDemo> {i => @Assert(envIntNative(i.envVar, i.defaultValue), i.assertion)}
     }
 
     @TestCase
     public func test_envInt64() {
-        let testList = Array<TestEnvInt64Demo>(
-            [
-                TestEnvInt64Demo("ENV_111", "111", 0, 111),
-                TestEnvInt64Demo("ENV_EMPTY", "", 0, 0),
-                TestEnvInt64Demo("ENV_ZERO", "0", 0, 0),
-                TestEnvInt64Demo("ENV_ZERODEFAULT", "", 0, 0),
-                TestEnvInt64Demo("ENV_555", "", 555, 555),
-                TestEnvInt64Demo("ENV_INVALID", "abc", 123, 123),
-                TestEnvInt64Demo("ENV_NEGATIVE", "-999", 0, -999),
-                TestEnvInt64Demo("ENV_LARGEVALUE", "9223372036854775807", 0, 9223372036854775807)
-            ]
-        )
-        testList |> forEach<TestEnvInt64Demo> {i => setEnv(i.envVar, i.value)}
+        let testList = [
+            TestEnvInt64Demo("ENV_111", "111", 0, 111),
+            TestEnvInt64Demo("ENV_EMPTY", "", 0, 0),
+            TestEnvInt64Demo("ENV_ZERO", "0", 0, 0),
+            TestEnvInt64Demo("ENV_ZERODEFAULT", "", 0, 0),
+            TestEnvInt64Demo("ENV_555", "", 555, 555),
+            TestEnvInt64Demo("ENV_INVALID", "abc", 123, 123),
+            TestEnvInt64Demo("ENV_NEGATIVE", "-999", 0, -999),
+            TestEnvInt64Demo("ENV_LARGEVALUE", "9223372036854775807", 0, 9223372036854775807)
+        ]
+        testList |> forEach<TestEnvInt64Demo> {i => setVariable(i.envVar, i.value)}
         testList |> forEach<TestEnvInt64Demo> {i => @Assert(envInt64(i.envVar, i.defaultValue), i.assertion)}
     }
 
     @TestCase
     public func test_envInts() {
-        let testList = Array<TestEnvIntsDemo>(
-            [
-                TestEnvIntsDemo("MY_VAR_1234", "1,2,3,4", ",", ArrayList<IntNative>([]), ArrayList<IntNative>([1, 2, 3,
-                    4])),
-                TestEnvIntsDemo("MY_VAR_EMPTY_567", "", ",", ArrayList<IntNative>([1, 2, 3]),
-                    ArrayList<IntNative>([1, 2, 3])),
-                TestEnvIntsDemo("MY_VAR_EMPTY_103020", "", ",", ArrayList<IntNative>([1, 2, 3]),
-                    ArrayList<IntNative>([1, 2, 3])),
-                TestEnvIntsDemo("MY_VAR_INVALID_1abc34", "1,abc,3,4", ",", ArrayList<IntNative>([]),
-                    ArrayList<IntNative>([])),
-                TestEnvIntsDemo("MY_VAR_42", "42", ",", ArrayList<IntNative>([]), ArrayList<IntNative>([42])),
-                TestEnvIntsDemo("MY_VAR_1minus2_3minus4", "1,-2,3,-4", ",", ArrayList<IntNative>([]),
-                    ArrayList<IntNative>([1, -2, 3, -4])),
-                TestEnvIntsDemo("MY_VAR_EMPTY_DEFAULT", "", ",", ArrayList<IntNative>([]), ArrayList<IntNative>([]))
-            ]
-        )
-        testList |> forEach<TestEnvIntsDemo> {i => setEnv(i.envVar, i.value)}
+        let testList = [
+            TestEnvIntsDemo("MY_VAR_1234", "1,2,3,4", ",", ArrayList<IntNative>(), ArrayList<IntNative>([1, 2, 3,
+                4])),
+            TestEnvIntsDemo("MY_VAR_EMPTY_567", "", ",", ArrayList<IntNative>([1, 2, 3]),
+                ArrayList<IntNative>([1, 2, 3])),
+            TestEnvIntsDemo("MY_VAR_EMPTY_103020", "", ",", ArrayList<IntNative>([1, 2, 3]),
+                ArrayList<IntNative>([1, 2, 3])),
+            TestEnvIntsDemo("MY_VAR_INVALID_1abc34", "1,abc,3,4", ",", ArrayList<IntNative>(),
+                ArrayList<IntNative>()),
+            TestEnvIntsDemo("MY_VAR_42", "42", ",", ArrayList<IntNative>(), ArrayList<IntNative>([42])),
+            TestEnvIntsDemo("MY_VAR_1minus2_3minus4", "1,-2,3,-4", ",", ArrayList<IntNative>(),
+                ArrayList<IntNative>([1, -2, 3, -4])),
+            TestEnvIntsDemo("MY_VAR_EMPTY_DEFAULT", "", ",", ArrayList<IntNative>(), ArrayList<IntNative>())
+        ]
+        testList |> forEach<TestEnvIntsDemo> {i => setVariable(i.envVar, i.value)}
         testList |> forEach<TestEnvIntsDemo> {i => @Assert(envInts(i.envVar, i.separator, i.defaultValue), i.assertion)}
     }
 
     @TestCase
     public func test_envFloat64() {
-        let testList = Array<TestEnvFloat64Demo>(
-            [
-                TestEnvFloat64Demo("ENV_3_14", "3.14", 0.0, 3.14),
-                TestEnvFloat64Demo("ENV_EMPTY", "", 0.0, 0.0),
-                TestEnvFloat64Demo("ENV_ZERO", "0.0", 0.0, 0.0),
-                TestEnvFloat64Demo("ENV_ZERODEFAULT", "", 1.0, 1.0),
-                TestEnvFloat64Demo("ENV_NEGATIVE", "-5.5", 0.0, -5.5),
-                TestEnvFloat64Demo("ENV_INVALID", "abc", 10.0, 10.0)
-            ]
-        )
-        testList |> forEach<TestEnvFloat64Demo> {i => setEnv(i.envVar, i.value)}
+        let testList = [
+            TestEnvFloat64Demo("ENV_3_14", "3.14", 0.0, 3.14),
+            TestEnvFloat64Demo("ENV_EMPTY", "", 0.0, 0.0),
+            TestEnvFloat64Demo("ENV_ZERO", "0.0", 0.0, 0.0),
+            TestEnvFloat64Demo("ENV_ZERODEFAULT", "", 1.0, 1.0),
+            TestEnvFloat64Demo("ENV_NEGATIVE", "-5.5", 0.0, -5.5),
+            TestEnvFloat64Demo("ENV_INVALID", "abc", 10.0, 10.0)
+        ]
+        testList |> forEach<TestEnvFloat64Demo> {i => setVariable(i.envVar, i.value)}
         testList |> forEach<TestEnvFloat64Demo> {i => @Assert(envFloat64(i.envVar, i.defaultValue), i.assertion)}
     }
 
     @TestCase
     public func test_envBool() {
-        let testList = Array<TestEnvBoolDemo>(
-            [
-                TestEnvBoolDemo("ENV_TRUE", "true", false, true),
-                TestEnvBoolDemo("ENV_FALSE", "false", true, false),
-                TestEnvBoolDemo("ENV_1", "1", false, true),
-                TestEnvBoolDemo("ENV_0", "0", true, false),
-                TestEnvBoolDemo("ENV_1", "TRUE", false, true),
-                TestEnvBoolDemo("ENV_0", "FALSE", true, false),
-                TestEnvBoolDemo("ENV_1", "t", false, true),
-                TestEnvBoolDemo("ENV_0", "f", true, false),
-                TestEnvBoolDemo("ENV_1", "T", false, true),
-                TestEnvBoolDemo("ENV_0", "F", true, false),
-                TestEnvBoolDemo("ENV_INVALID", "notabool", true, true),
-                TestEnvBoolDemo("ENV_EMPTY", "", false, false),
-                TestEnvBoolDemo("ENV_SETDEFAULT", "", true, true)
-            ]
-        )
-        testList |> forEach<TestEnvBoolDemo> {i => setEnv(i.envVar, i.value)}
+        let testList = [
+            TestEnvBoolDemo("ENV_TRUE", "true", false, true),
+            TestEnvBoolDemo("ENV_FALSE", "false", true, false),
+            TestEnvBoolDemo("ENV_1", "1", false, true),
+            TestEnvBoolDemo("ENV_0", "0", true, false),
+            TestEnvBoolDemo("ENV_1", "TRUE", false, true),
+            TestEnvBoolDemo("ENV_0", "FALSE", true, false),
+            TestEnvBoolDemo("ENV_1", "t", false, true),
+            TestEnvBoolDemo("ENV_0", "f", true, false),
+            TestEnvBoolDemo("ENV_1", "T", false, true),
+            TestEnvBoolDemo("ENV_0", "F", true, false),
+            TestEnvBoolDemo("ENV_INVALID", "notabool", true, true),
+            TestEnvBoolDemo("ENV_EMPTY", "", false, false),
+            TestEnvBoolDemo("ENV_SETDEFAULT", "", true, true)
+        ]
+        testList |> forEach<TestEnvBoolDemo> {i => setVariable(i.envVar, i.value)}
         testList |> forEach<TestEnvBoolDemo> {i => @Assert(envBool(i.envVar,i.defaultValue), i.assertion)}
     }
 
     @TestCase
     public func test_envCheckerMany() {
-        let testList = Array<TestEnvCheckerManyDemo>(
-            [
-                TestEnvCheckerManyDemo(
-                    "TwoValid",
-                    ArrayList<EnvChecker>(EnvChecker("ENVALRIGHT1", "X", true, false),
-                        EnvChecker("ENVALRIGHT2", "Y", false, true))
-                ),
-                TestEnvCheckerManyDemo(
-                    "EOneValidOneInvalid",
-                    ArrayList<EnvChecker>(EnvChecker("ENVALRIGHT1", "X", true, false),
-                        EnvChecker("ENVEMPTYMANDATORY1", "", true, true))
-                ),
-                TestEnvCheckerManyDemo(
-                    "TwoInvalid",
-                    ArrayList<EnvChecker>(EnvChecker("ENVEMPTYMANDATORY1", "", true, true),
-                        EnvChecker("ENVMANDATORYWITHDEFAULT2", "", true, false))
-                ),
-                TestEnvCheckerManyDemo(
-                    "ThreeValid",
-                    ArrayList<EnvChecker>(
-                        EnvChecker("ENVALRIGHT1", "X", true, false),
-                        EnvChecker("ENVEMPTYOPTIONAL1", "", false, true),
-                        EnvChecker("ENVMANDATORYWITHDEFAULT1", "default1", true, true)
-                    )
-                )
-            ]
-        )
+        let testList = [
+            TestEnvCheckerManyDemo(
+                "TwoValid",
+                ArrayList<EnvChecker>([EnvChecker("ENVALRIGHT1", "X", true, false),
+                    EnvChecker("ENVALRIGHT2", "Y", false, true)])
+            ),
+            TestEnvCheckerManyDemo(
+                "EOneValidOneInvalid",
+                ArrayList<EnvChecker>([EnvChecker("ENVALRIGHT1", "X", true, false),
+                    EnvChecker("ENVEMPTYMANDATORY1", "", true, true)])
+            ),
+            TestEnvCheckerManyDemo(
+                "TwoInvalid",
+                ArrayList<EnvChecker>([EnvChecker("ENVEMPTYMANDATORY1", "", true, true),
+                    EnvChecker("ENVMANDATORYWITHDEFAULT2", "", true, false)])
+            ),
+            TestEnvCheckerManyDemo(
+                "ThreeValid",
+                ArrayList<EnvChecker>([
+                    EnvChecker("ENVALRIGHT1", "X", true, false),
+                    EnvChecker("ENVEMPTYOPTIONAL1", "", false, true),
+                    EnvChecker("ENVMANDATORYWITHDEFAULT1", "default1", true, true)
+                ])
+            )
+        ]
 
         @Assert(envCheckerMany(testList[0].envCheckers).toString(), "")
         @Assert(envCheckerMany(testList[3].envCheckers).toString(), "")
@@ -393,20 +373,18 @@ public class TestEnv {
 
     @TestCase
     public func test_envLoadFromDisk() {
-        let testList = Array<TestEnvLoadFromDiskDemo>(
-            [
-                TestEnvLoadFromDiskDemo("#THISIS", ""),
-                TestEnvLoadFromDiskDemo("STARTWITH", "SPACE"),
-                TestEnvLoadFromDiskDemo("_INVALIDXX1", ""),
-                TestEnvLoadFromDiskDemo("VALIDXX1", "NORMAL"),
-                TestEnvLoadFromDiskDemo("lowercase", "111"),
-                TestEnvLoadFromDiskDemo("10INVALIDXX11", ""),
-                TestEnvLoadFromDiskDemo("INVALIDXX2", "")
-            ]
-        )
+        let testList = [
+            TestEnvLoadFromDiskDemo("#THISIS", ""),
+            TestEnvLoadFromDiskDemo("STARTWITH", "SPACE"),
+            TestEnvLoadFromDiskDemo("_INVALIDXX1", ""),
+            TestEnvLoadFromDiskDemo("VALIDXX1", "NORMAL"),
+            TestEnvLoadFromDiskDemo("lowercase", "111"),
+            TestEnvLoadFromDiskDemo("10INVALIDXX11", ""),
+            TestEnvLoadFromDiskDemo("INVALIDXX2", "")
+        ]
         envLoadFromDisk(getRootPath("env_test.txt").toString(), true, true)
         for (i in testList) {
-            match (getEnv(i.envVar)) {
+            match (getVariable(i.envVar)) {
                 case None => @Expect("", i.assertion)
                 case Some(v) => @Expect(v, i.assertion)
             }

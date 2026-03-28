@@ -8,7 +8,7 @@ public func arrayDifferenceAtoB(a: ArrayList<Int64>, b: ArrayList<Int64>): Array
     a |> forEach<Int64> {i => m[i] = false}
     b |> forEach<Int64> {i => m[i] = true}
     let diff: ArrayList<Int64> = ArrayList<Int64>()
-    a |> filter {i => !m[i]} |> forEach<Int64>(diff.append)
+    a |> filter {i => !m[i]} |> forEach<Int64> {i => diff.add(i)}
     return diff
 }
 
@@ -16,6 +16,6 @@ public func arrayDifferenceAtoB(a: ArrayList<Int64>, b: ArrayList<Int64>): Array
 public func arrayDifference(a: ArrayList<Int64>, b: ArrayList<Int64>): ArrayList<Int64> {
     let diffA = arrayDifferenceAtoB(a, b)
     let diffB = arrayDifferenceAtoB(b, a)
-    diffA |> forEach<Int64>(diffB.append)
+    diffA |> forEach<Int64> {i => diffB.add(i)}
     return diffB
 }

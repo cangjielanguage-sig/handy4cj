@@ -31,8 +31,7 @@ public class TestStringAsIntDemo {
 public class TestConvert {
     @TestCase
     public func test_stringAsFloat() {
-        let testList = Array<TestStringAsFloatDemo>(
-            [
+        let testList = [
                 TestStringAsFloatDemo("123.45", r'.', r',', 123.45),
                 TestStringAsFloatDemo("1,234.56", r'.', r',', 1234.56),
                 TestStringAsFloatDemo("1.234,56", r'.', r',', 1.23456),
@@ -42,7 +41,6 @@ public class TestConvert {
                 TestStringAsFloatDemo("abc", r'.', r',', 0.0),
                 TestStringAsFloatDemo("", r'.', r',', 0.0)
             ]
-        )
         testList |>
             forEach<TestStringAsFloatDemo> {
             i => @Expect(stringAsFloat(i.input, i.decimalSeparator, i.thousandsSeparator) , i.expectedOutput)
@@ -51,8 +49,7 @@ public class TestConvert {
 
     @TestCase
     public func test_stringAsInt() {
-        let testList = Array<TestStringAsIntDemo>(
-            [
+        let testList = [
                 TestStringAsIntDemo("", 0),
                 TestStringAsIntDemo("123", 123),
                 TestStringAsIntDemo("-123", -123),
@@ -63,7 +60,6 @@ public class TestConvert {
                 TestStringAsIntDemo("2147483648", 2147483648),
                 TestStringAsIntDemo("-2147483648", -2147483648)
             ]
-        )
         testList |> forEach<TestStringAsIntDemo> {i => @Expect(stringAsInteger(i.input), i.expectedOutput)}
     }
 }

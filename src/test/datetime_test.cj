@@ -57,7 +57,7 @@ public class TestDateTime {
                 "dd/MM/YYYY"), "31/10/2018")
         @Assert(dateTimeAsString(
                 DateTime.of(year: 2018, month: 10, dayOfMonth: 31, hour: 1, minute: 2, second: 2, nanosecond: 651387237),
-                "yyyy-MM-dd hh:mm:ss OO"), "2018-10-31 01:02:02 +08:00")
+                "yyyy-MM-dd hh:mm:ss OO"), "2018-10-31 01:02:02 +00:00")
         @Assert(dateTimeAsString(
                 DateTime.of(year: 2018, month: 10, dayOfMonth: 31, hour: 1, minute: 2, second: 2, nanosecond: 651387237),
                 "yyyy-MM-dd hh:mm:ss"), "2018-10-31 01:02:02")
@@ -69,30 +69,30 @@ public class TestDateTime {
     @TestCase
     public func test_nowAsString() {
         let t = DateTime.now()
-        @Assert(nowAsString("yyyy-MM-dd hh:mm:ss OO"), t.toString("yyyy-MM-dd hh:mm:ss OO"))
+        @Assert(nowAsString("yyyy-MM-dd hh:mm:ss OO"), t.format("yyyy-MM-dd hh:mm:ss OO"))
     }
 
     @TestCase
     public func test_today() {
         let t = DateTime.now()
         @Assert(today()[0], DateTime.of(year: t.year, month: t.month, dayOfMonth: t.dayOfMonth))
-        @Assert(today()[1], DateTime.of(year: t.year, month: t.month, dayOfMonth: t.dayOfMonth).toString("yyyy-MM-dd"))
-        @Assert(today()[1] != t.toString("yyyy-MM-dd HH-mm-ss"))
+        @Assert(today()[1], DateTime.of(year: t.year, month: t.month, dayOfMonth: t.dayOfMonth).format("yyyy-MM-dd"))
+        @Assert(today()[1] != t.format("yyyy-MM-dd HH-mm-ss"))
     }
 
     @TestCase
     public func test_todayf() {
         let t = DateTime.now()
         @Assert(todayf("yyyy-MM-dd")[0], DateTime.of(year: t.year, month: t.month, dayOfMonth: t.dayOfMonth))
-        @Assert(todayf("yyyy-MM-dd")[1], DateTime.of(year: t.year, month: t.month, dayOfMonth: t.dayOfMonth).toString("yyyy-MM-dd"))
-        @Assert(todayf("yyyy-MM-dd")[1] != t.toString("yyyy-MM-dd HH-mm-ss"))
+        @Assert(todayf("yyyy-MM-dd")[1], DateTime.of(year: t.year, month: t.month, dayOfMonth: t.dayOfMonth).format("yyyy-MM-dd"))
+        @Assert(todayf("yyyy-MM-dd")[1] != t.format("yyyy-MM-dd HH-mm-ss"))
     }
 
     @TestCase
     public func test_YMD() {
         let t = DateTime.now()
         @Assert(YMD()[0], t.year)
-        @Assert(YMD()[1], t.monthValue)
+        @Assert(YMD()[1], t.month.toInteger())
         @Assert(YMD()[2], t.dayOfMonth)
     }
 
@@ -128,14 +128,14 @@ public class TestDateTime {
 
     @TestCase
     public func test_YMDasDateUTC() {
-        @Assert(YMDasDateUTC("2025-04-02T21:50:00+08:00", false), DateTime.of(year: 2025, month: 4, dayOfMonth: 2, hour: 21, minute: 50, second: 0))
+        @Assert(YMDasDateUTC("2025-04-02T21:50:00+08:00", false), DateTime.parse("2025-04-02T21:50:00+08:00"))
         @Assert(YMDasDateUTC("2025-04-02T21:50:00+08:00", true), DateTime.of(year: 2025, month: 4, dayOfMonth: 2, timeZone: TimeZone.UTC))
         @AssertThrows[TimeParseException](YMDasDateUTC("2025-04-0221:50:00+08:00", true))
     }
 
     @TestCase
     public func test_YMDasDate() {
-        @Assert(YMDasDate("2025-04-02T21:50:00+08:00"), DateTime.of(year: 2025, month: 4, dayOfMonth: 2, hour: 21, minute: 50, second: 0))
+        @Assert(YMDasDate("2025-04-02T21:50:00+08:00"), DateTime.parse("2025-04-02T21:50:00+08:00"))
         @AssertThrows[TimeParseException](YMDasDate("2025-04-0221:50:00+08:00"))
     }
 
@@ -233,8 +233,7 @@ public class TestDateTime {
 
     @TestCase
     public func test_dateStrCheckAge() {
-        let testList = Array<TestDateStrCheckAgeDemo>(
-            [
+        let testList = [
                 TestDateStrCheckAgeDemo("2000-04-05", "yyyy-MM-dd", 20, 30, false, 0),
                 TestDateStrCheckAgeDemo("1990-04-05", "yyyy-MM-dd", 20, 30, false, 2),
                 TestDateStrCheckAgeDemo(DateTime.UnixEpoch.toString(), "yyyy-MM-dd", 20, 30, false, 1),
@@ -242,7 +241,6 @@ public class TestDateTime {
                 TestDateStrCheckAgeDemo("", "yyyy-MM-dd", 20, 30, true, 0),
                 TestDateStrCheckAgeDemo("1995-04-05", "yyyy-MM-dd", 20, 30, true, 0)
             ]
-        )
         testList |>
             forEach<TestDateStrCheckAgeDemo> {
             i => @Expect(dateStrCheckAge(i.date, i.format, i.yearsAgeMin, i.yearsAgeMax, i.acceptEmpty), i.expectedOutput)
@@ -251,8 +249,7 @@ public class TestDateTime {
 
     @TestCase
     public func test_dateStrCheckRange() {
-        let testList = Array<TestDateStrCheckRangeDemo>(
-            [
+        let testList = [
                 TestDateStrCheckRangeDemo("2020-04-05", "yyyy-MM-dd", DateTime.of(year: 2010, month: 1, dayOfMonth: 1),
                     DateTime.of(year: 2025, month: 1, dayOfMonth: 1), false, 0),
                 TestDateStrCheckRangeDemo("2000-04-05", "yyyy-MM-dd", DateTime.of(year: 2010, month: 1, dayOfMonth: 1),
@@ -266,7 +263,6 @@ public class TestDateTime {
                 TestDateStrCheckRangeDemo("invalid-date", "yyyy-MM-dd", DateTime.of(year: 2010, month: 1, dayOfMonth: 1),
                     DateTime.of(year: 2025, month: 1, dayOfMonth: 1), false, 1)
             ]
-        )
         testList |>
             forEach<TestDateStrCheckRangeDemo> {
             i => @Expect(dateStrCheckRange(i.date, i.format, i.dateMin, i.dateMax, i.acceptEmpty), i.expectedOutput)

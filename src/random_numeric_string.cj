@@ -24,8 +24,8 @@ public func randomNumericString(forbiddenDogits: ArrayList<Int>, lengthMin: Int,
 
     if (forbiddenDogits.size > 0) {
         forbiddenDogits |> forEach<Int> {i => allowedDigits[i] = false}
-        let remainingAllowed = ArrayList<Int>([])
-        allowedDigits |> filter {p => p[1]} |> forEach{p => remainingAllowed.append(p[0])}  
+        let remainingAllowed = ArrayList<Int>()
+        allowedDigits |> filter {p => p[1]} |> forEach{p => remainingAllowed.add(p[0])}  
         if (remainingAllowed.size == 0) {
             return ""
         } else if (remainingAllowed.size == 1) {
@@ -33,11 +33,11 @@ public func randomNumericString(forbiddenDogits: ArrayList<Int>, lengthMin: Int,
         }
     }
 
-    let s = ArrayList<String>([])
+    let s = ArrayList<String>()
     while (s.size < length) {
         let x = randomInt(0, 9)
         if (allowedDigits[x]) {
-            s.append(x.toString())
+            s.add(x.toString())
         }
     }
     return String.join(s.toArray())

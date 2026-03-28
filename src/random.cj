@@ -5,8 +5,7 @@ import std.random.*
 import std.time.*
 
 public func initRandom(): Random {
-    let random = Random()
-    random.seed = UInt64(DateTime.nowUTC().toUnixTimeStamp().toNanoseconds())
+    let random = Random(UInt64(DateTime.nowUTC().toUnixTimeStamp().toNanoseconds()))
     return random
 }
 
@@ -16,15 +15,15 @@ public func randomInt(min: Int, max: Int): Int {
 }
 
 public func randomIntArray(min: Int, max: Int, howMany: Int): ArrayList<Int> {
-    let result = ArrayList<Int>([])
+    let result = ArrayList<Int>()
     while (result.size < howMany) {
-        result.append(randomInt(min, max))
+        result.add(randomInt(min, max))
     }
     return result
 }
 
 public func randomReseed(min: Int, max: Int): Int {
     let random = initRandom()
-    random.seed = random.seed + random.nextUInt64(random.seed)
-    return random.nextInt64(max - min) + min
+    let reseededRandom = Random(random.seed + random.nextUInt64())
+    return reseededRandom.nextInt64(max - min) + min
 }

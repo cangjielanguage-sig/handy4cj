@@ -27,8 +27,7 @@ public class TestNewPasswordDemo {
 public class TestPassword {
     @TestCase
     public func test_checkNewPassword() {
-        let testList = Array<TestNewPasswordDemo>(
-            [
+        let testList = [
                 TestNewPasswordDemo("test lowest flag", "1234AB", "1234AB", 6, CheckNewPasswordComplexityLowest,
                     CheckNewPasswordResultOK),
                 TestNewPasswordDemo("test check password", "1234AB", "1234A", 6, CheckNewPasswordComplexityLowest,
@@ -64,7 +63,6 @@ public class TestPassword {
                 TestNewPasswordDemo("test require symbol error", "abcd", "abcd", 4,
                     CheckNewPasswordComplexityRequireSymbol, CheckNewPasswordResultTooSimple)
             ]
-        )
         testList |>
             forEach<TestNewPasswordDemo> {
             i => @Assert(checkNewPassword(i.password, i.checkPassword, i.minimumLength, i.flag), i.expectedOutput)

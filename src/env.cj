@@ -1,11 +1,12 @@
 package handy4cj
 
 import std.collection.*
+import std.env.*
 import std.fs.*
 import std.io.*
-import std.log.*
+import stdx.log.*
+import stdx.logger.*
 import std.math.numeric.*
-import std.os.*
 import std.regex.*
 
 // nvChecker 包含验证环境变量的指令
@@ -23,21 +24,21 @@ public class EnvChecker {
 }
 
 public func debugLog(msg: String, debugPrint: Bool) {
-    let logger = SimpleLogger()
+    let logger = SimpleLogger(getStdOut())
     if (debugPrint) {
-        logger.log(LogLevel.ALL, msg)
+        logger.info(msg)
     }
 }
 
 // envCheck 测试环境变量
 public func envCheck(varName: String, defaultValue: String, mandatory: Bool, debugPrint: Bool) {
-    if (!getEnv(varName).isNone() && Some(getEnv(varName)) != "") {
+    if (!getVariable(varName).isNone() && Some(getVariable(varName)) != "") {
         debugLog("environment variable " + varName + " asserted", debugPrint)
         return ""
     }
     if (defaultValue != "") {
         try {
-            setEnv(varName, defaultValue)
+            setVariable(varName, defaultValue)
             return ""
         } catch (e: IllegalArgumentException) {
             debugLog("environment variable " + varName + "asserted with default value", debugPrint)
@@ -51,24 +52,24 @@ public func envCheck(varName: String, defaultValue: String, mandatory: Bool, deb
 }
 
 public func envStr(key: String, defaultValue: String): String {
-    if (!getEnv(key).isNone() && Some(getEnv(key)) != "") {
-        return getEnv(key).getOrThrow()
+    if (!getVariable(key).isNone() && Some(getVariable(key)) != "") {
+        return getVariable(key).getOrThrow()
     }
     return defaultValue
 }
 
 public func envStrs(key: String, separator: String, defaultValue: ArrayList<String>): ArrayList<String> {
-    if (getEnv(key).isNone() || Some(getEnv(key)) == "") {
+    if (getVariable(key).isNone() || Some(getVariable(key)) == "") {
         return defaultValue
     }
     let envList = ArrayList<String>()
-    getEnv(key).getOrThrow().split(separator, removeEmpty: false) |> forEach<String>(envList.append)
+    getVariable(key).getOrThrow().split(separator, removeEmpty: false) |> forEach<String> {i => envList.add(i)}
     return envList
 }
 
 public func envIntNative(key: String, defaultValue: IntNative): IntNative {
     try {
-        return match (getEnv(key)) {
+        return match (getVariable(key)) {
             case None => defaultValue
             case Some(v) => Decimal(v).toIntNative()
         }
@@ -79,7 +80,7 @@ public func envIntNative(key: String, defaultValue: IntNative): IntNative {
 
 public func envInt64(key: String, defaultValue: Int64): Int64 {
     try {
-        return match (getEnv(key)) {
+        return match (getVariable(key)) {
             case None => defaultValue
             case Some(v) => Decimal(v).toInt64()
         }
@@ -91,7 +92,7 @@ public func envInt64(key: String, defaultValue: Int64): Int64 {
 public func envInts(key: String, separator: String, defaultValue: ArrayList<IntNative>): ArrayList<IntNative> {
     let envList = ArrayList<IntNative>()
     try {
-        match (getEnv(key)) {
+        match (getVariable(key)) {
             case None =>
                 if (!defaultValue.isEmpty()) {
                     return defaultValue
@@ -101,7 +102,7 @@ public func envInts(key: String, separator: String, defaultValue: ArrayList<IntN
                     return defaultValue
                 }
                 v.split(separator, removeEmpty: false) |>
-                    forEach<String> {i => envList.append(Decimal(i).toIntNative())}
+                    forEach<String> {i => envList.add(Decimal(i).toIntNative())}
         }
     } catch (e: IllegalArgumentException) {
         return defaultValue
@@ -111,7 +112,7 @@ public func envInts(key: String, separator: String, defaultValue: ArrayList<IntN
 
 public func envFloat64(key: String, defaultValue: Float64): Float64 {
     try {
-        return match (getEnv(key)) {
+        return match (getVariable(key)) {
             case None => defaultValue
             case Some(v) => Decimal(v).toFloat64()
         }
@@ -121,9 +122,9 @@ public func envFloat64(key: String, defaultValue: Float64): Float64 {
 }
 
 public func envBool(key: String, defaultValue: Bool): Bool {
-    let trueList = Array<String>(["t", "T", "true", "TRUE", "1"])
-    let falseList = Array<String>(["f", "F", "false", "FALSE", "0"])
-    match (getEnv(key)) {
+    let trueList = ["t", "T", "true", "TRUE", "1"]
+    let falseList = ["f", "F", "false", "FALSE", "0"]
+    match (getVariable(key)) {
         case None => defaultValue
         case Some(v) =>
             if (trueList.contains(v)) {
@@ -153,7 +154,7 @@ let reEnvVarRow = Regex("^([A-Za-z][0-9A-Za-z_]*)=(\\S+)")
 // overwriteValue 如果为 false，表示跳过已经定义的环境变量
 public func envLoadFromDisk(fileName: String, mustHave: Bool, overwriteValues: Bool) {
     var text = ""
-    try (envFile = File.openRead(fileName), content = StringReader(envFile)) {
+    try (envFile = File(fileName, OpenMode.Read), content = StringReader(envFile)) {
         text = content.readToEnd().replace("\r\n", "\n")
     } catch (e: Exception) {
         if (!mustHave) {
@@ -163,21 +164,20 @@ public func envLoadFromDisk(fileName: String, mustHave: Bool, overwriteValues: B
     }
     let rows = text.split("\n", removeEmpty: false)
     for (row in rows) {
-        let matcher = Matcher(reEnvVarRow, row.trimAscii())
-        let matches = matcher.fullMatch()
+        let matches = reEnvVarRow.find(row.trimAscii())
         match (matches) {
             case None => continue
             case Some(v) =>
                 if (v.groupNumber() == 0) {
                     continue
                 }
-                let matchResult = v.matchStr().split("=")
+                let matchResult = v.matchString().split("=")
                 let key = matchResult[0]
                 let value = matchResult[1]
-                if (!getEnv(key).isNone() && !overwriteValues) {
+                if (!getVariable(key).isNone() && !overwriteValues) {
                     continue
                 }
-                setEnv(key, value)
+                setVariable(key, value)
         }
     }
     return ""

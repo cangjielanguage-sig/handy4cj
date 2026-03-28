@@ -24,8 +24,7 @@ public class TestTransformDemo {
 public class TestTransform {
     @TestCase
     public func test_transform() {
-        let testList = Array<TestTransformDemo>(
-            [
+        let testList = [
                 TestTransformDemo("without flags",
                     "The Cj programming language is an open source project to make programmers more productive.", 20,
                     TransformNone, "The Cj programming l"),
@@ -59,7 +58,6 @@ public class TestTransform {
                         TransformFlagOnlyLetters | TransformFlagTrim | TransformFlagLowerCase | TransformFlagUpperCase,
                     "")
             ]
-        )
         testList |> forEach<TestTransformDemo> {i => @Expect(transform(i.input, i.max, i.flags), i.expectedOutput)}
     }
 

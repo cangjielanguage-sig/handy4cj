@@ -25,10 +25,10 @@ public class ArrayTest {
         testB = ArrayList<Int64>([1, 2, 3, 4, 5])
         @Expect(arrayDifferenceAtoB(testA, testB),ArrayList<Int64>())
 
-        testB = ArrayList<Int64>([])
+        testB = ArrayList<Int64>()
         @Expect(arrayDifferenceAtoB(testA, testB),ArrayList<Int64>([1,2,3,4]))
 
-        testA = ArrayList<Int64>([])
+        testA = ArrayList<Int64>()
         @Expect(arrayDifferenceAtoB(testA, testB),ArrayList<Int64>())
 
         testB = ArrayList<Int64>([1, 2, 3, 4])
@@ -53,10 +53,10 @@ public class ArrayTest {
         testB = ArrayList<Int64>([1, 2, 3, 4, 5])
         @Expect(arrayDifference(testA, testB),ArrayList<Int64>([5]))
 
-        testB = ArrayList<Int64>([])
+        testB = ArrayList<Int64>()
         @Expect(arrayDifference(testA, testB),ArrayList<Int64>([1,2,3,4]))
 
-        testA = ArrayList<Int64>([])
+        testA = ArrayList<Int64>()
         @Expect(arrayDifference(testA, testB),ArrayList<Int64>())
 
         testB = ArrayList<Int64>([1, 2, 3, 4])

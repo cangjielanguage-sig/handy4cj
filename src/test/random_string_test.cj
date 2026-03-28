@@ -31,13 +31,11 @@ public class TestRandomStringDemo {
 public class TestRandomString {
     @TestCase
     public func test_random_string() {
-        let testList = Array<TestRandomStringDemo>(
-            [
+        let testList = [
                 TestRandomStringDemo("zeroed len", 0, 0, false, false, false, false, ""),
                 TestRandomStringDemo("zeroedMaxLen", 1, 0, false, false, false, false, ""),
                 TestRandomStringDemo("minLen>maxLen", 2, 1, false, false, false, false, "")
             ]
-        )
         testList |>
             forEach<TestRandomStringDemo> {
             i => @Assert(randomString(i.minLen, i.maxLen, i.allowUnicode, i.allowNumbers, i.allowSymbols, i.allowSpaces), i.expectedOutput)

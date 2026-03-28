@@ -35,8 +35,7 @@ public class TestNameDemo {
 public class TestName {
     @TestCase
     public func test_checkPersonName() {
-        let testList = Array<TestCheckPersonNameDemo>(
-            [
+        let testList = [
                 TestCheckPersonNameDemo("Only two letters", "T S", false, CheckPersonNameResultTooSimple),
                 TestCheckPersonNameDemo("only four letters", "ABC D", false, CheckPersonNameResultTooSimple),
                 TestCheckPersonNameDemo("five letters with non-ascii runes", "ça vá", false,
@@ -63,14 +62,12 @@ public class TestName {
                 TestCheckPersonNameDemo("Sending numbers, expecting false", "5454", false, CheckPersonNameResultPolluted
                 )
             ]
-        )
         testList |> forEach {i => @Expect(checkPersonName(i.name, i.acceptEmpty), i.expectedOutput)}
     }
 
     @TestCase
     public func test_nameFirstAndLast() {
-        let testList = Array<TestNameDemo>(
-            [
+        let testList = [
                 TestNameDemo("Only two letters", "x Y", TransformNone, "x Y"),
                 TestNameDemo("one word name", "namë", TransformNone, "namë"),
                 TestNameDemo("all non-ascii runes", "çá öáã àÿ", TransformNone, "çá àÿ"),
@@ -89,15 +86,13 @@ public class TestName {
                 TestNameDemo("regular name to title", "name LASTNAME", TransformFlagTitleCase, "Name Lastname"),
                 TestNameDemo("REGULAR Name to lOwEr", "name LASTNAME", TransformFlagLowerCase, "name lastname")
             ]
-        )
 
         testList |> forEach<TestNameDemo> {i => @Expect(nameFirstAndLast(i.name, i.transformFlags), i.expectedOutput)}
     }
 
     @TestCase
     public func test_nameFirst() {
-        let testList = Array<TestNameDemo>(
-            [
+        let testList = [
                 TestNameDemo("Only two letters", "x Y", TransformNone, "x"),
                 TestNameDemo("one word name", "namë", TransformNone, "namë"),
                 TestNameDemo("all non-ascii runes", "çá öáã àÿ", TransformNone, "çá"),
@@ -115,14 +110,12 @@ public class TestName {
                 TestNameDemo("regular name to title", "name LASTNAME", TransformFlagTitleCase, "Name"),
                 TestNameDemo("REGULAR Name to lOwEr", "name LASTNAME", TransformFlagLowerCase, "name")
             ]
-        )
         testList |> forEach<TestNameDemo> {i => @Expect(nameFirst(i.name, i.transformFlags), i.expectedOutput)}
     }
 
     @TestCase
     public func test_nameInitials() {
-        let testList = Array<TestNameDemo>(
-            [
+        let testList = [
                 TestNameDemo("simplest 2 words name", "miguel pragier", TransformNone, "m p"),
                 TestNameDemo("3 words name separated", "ivan alexandrovitch kleshtakov", TransformNone, "i a k"),
                 TestNameDemo("3 words with unicode", "Ívän Âlexandrovitch Çzelyatchenko", TransformNone, "Í Â Ç"),
@@ -138,7 +131,6 @@ public class TestName {
                 TestNameDemo("one word", "asingleword", TransformNone, "a"),
                 TestNameDemo("comma separators", "name,with,comma,separators", TransformNone, "n")
             ]
-        )
         testList |> forEach<TestNameDemo> {i => @Expect(nameInitials(i.name, i.transformFlags), i.expectedOutput)}
     }
 }

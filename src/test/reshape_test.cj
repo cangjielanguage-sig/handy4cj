@@ -22,8 +22,7 @@ public class TestReshapePHDemo {
 public class TestReshape {
     @TestCase
     public func test_reshapePH() {
-        let testList = Array<TestReshapePHDemo>(
-            [
+        let testList = [
                 TestReshapePHDemo(r'#', "###-##-####", "1234567890", "123-45-67890"),
                 TestReshapePHDemo(r'#', "abcdefg", "1234567890", "abcdefg1234567890"),
                 TestReshapePHDemo(r'#', "", "1234567890", "1234567890"),
@@ -33,26 +32,25 @@ public class TestReshape {
                 TestReshapePHDemo(r'@', "@@@-@@@", "123456", "123-456"),
                 TestReshapePHDemo(r'#', "abc###xyz", "1234567890", "abc123xyz4567890"),
                 TestReshapePHDemo(r'#', "abc###", "1234567890", "abc1234567890")
-            ]
-        )
+        ]
         testList |>
             forEach<TestReshapePHDemo> {i => @Expect(reshapePH(i.placeHolder, i.format, i.sequence), i.expectedOutput)}
     }
 
     @TestCase
     public func test_reshape() {
-        @Expect(reshape("###-##-####", "1234567890"),"123-45-67890",)
-        @Expect(reshape("", "1234567890"),"1234567890",)
-        @Expect(reshape("###-##-####", ""),"",)
-        @Expect(reshape("###-##-####", "123"),"123",)
-        @Expect(reshape("###", "123"),"123",)
-        @Expect(reshape("***-***-****", "1234567890"),"***-***-****1234567890",)
-        @Expect(reshape("abc###xyz", "1234567890"),"abc123xyz4567890",)
-        @Expect(reshape("abc###", "1234567890"),"abc1234567890",)
-        @Expect(reshape("####", "1234567890"),"1234567890",)
-        @Expect(reshape("###-###", "123"),"123", )
-        @Expect(reshape("abcdefg", "1234567890"),"abcdefg1234567890",)
-        @Expect(reshape("###-###-####", "abc123xyz456"),"abc-123-xyz456", )
-        @Expect(reshape("###-###", ""),"",)
+        @Expect(reshape("###-##-####", "1234567890"),"123-45-67890")
+        @Expect(reshape("", "1234567890"),"1234567890")
+        @Expect(reshape("###-##-####", ""),"")
+        @Expect(reshape("###-##-####", "123"),"123")
+        @Expect(reshape("###", "123"),"123")
+        @Expect(reshape("***-***-****", "1234567890"),"***-***-****1234567890")
+        @Expect(reshape("abc###xyz", "1234567890"),"abc123xyz4567890")
+        @Expect(reshape("abc###", "1234567890"),"abc1234567890")
+        @Expect(reshape("####", "1234567890"),"1234567890")
+        @Expect(reshape("###-###", "123"),"123")
+        @Expect(reshape("abcdefg", "1234567890"),"abcdefg1234567890")
+        @Expect(reshape("###-###-####", "abc123xyz456"),"abc-123-xyz456")
+        @Expect(reshape("###-###", ""),"")
     }
 }

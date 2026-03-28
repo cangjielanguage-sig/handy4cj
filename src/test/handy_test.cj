@@ -80,29 +80,25 @@ public class TestHandy {
 
     @TestCase
     public func test_checkPhone() {
-        let testList = Array<TestCheckPhoneDemo>(
-            [
+        let testList = [
                 TestCheckPhoneDemo("Normal input", "948034118", false, true),
                 TestCheckPhoneDemo("Empty return false", "", false, false),
                 TestCheckPhoneDemo("Empty allowing empty", "", true, true),
                 TestCheckPhoneDemo("Normal input but allowing empty", "948034118", true, true),
                 TestCheckPhoneDemo("invalid input", "48034118", false, false)
             ]
-        )
         testList |> forEach<TestCheckPhoneDemo> {i => @Assert(checkPhone(i.input, i.allowEmpty), i.expectedOutput)}
     }
 
     @TestCase
     public func test_between() {
-        let testList = Array<TestBetweenDemo>(
-            [
+        let testList = [
                 TestBetweenDemo("normal test", 5, 0, 10, true),
                 TestBetweenDemo("with negative", -5, -10, 0, true),
                 TestBetweenDemo("mix with negative", 5, -10, 100, true),
                 TestBetweenDemo("Large Numbers", 1000, -1000, 10000, true),
                 TestBetweenDemo("Give me a false!", -5, -4, 0, false)
             ]
-        )
         testList |> forEach<TestBetweenDemo> {i => @Assert(between(i.number, i.min, i.max), i.expectedOutput)}
     }
 
@@ -118,8 +114,7 @@ public class TestHandy {
 
     @TestCase
     public func test_truncate() {
-        let testList = Array<TestTruncateDemo>(
-            [
+        let testList = [
                 TestTruncateDemo("normal Test",
                     "The Go programming language is an open source project to make programmers more productive.", 25,
                     false, "The Go programming langua"),
@@ -131,7 +126,6 @@ public class TestHandy {
                     true, ""),
                 TestTruncateDemo("zero zero", "", 45, true, "")
             ]
-        )
         testList |> forEach<TestTruncateDemo> {i => @Assert(truncate(i.input, i.limit, i.trim), i.expectedOutput)}
     }
 

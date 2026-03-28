@@ -1,7 +1,6 @@
 package handy4cj
 
 import std.collection.*
-import std.log.*
 import std.random.*
 import std.unicode.*
 
@@ -40,7 +39,7 @@ public func randomString(minLen: Int, maxLen: Int, allowUnicode: Bool, allowNumb
     let asciiTable = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~"
         .toRuneArray()
 
-    let str = ArrayList<Rune>([])
+    let str = ArrayList<Rune>()
     var r: Rune = r' '
     while (str.size < strLen) {
         match (allowUnicode) {
@@ -52,10 +51,10 @@ public func randomString(minLen: Int, maxLen: Int, allowUnicode: Bool, allowNumb
             }
         }
         match {
-            case r.isLetter() => str.append(r)
-            case r.isNumber() && allowNumbers => str.append(r)
-            case (r.isAsciiPunctuation() || isSymbol(r)) && allowSymbols => str.append(r)
-            case r.isWhiteSpace() && allowSpaces && !firstOrLast(str.size, strLen) => str.append(r)
+            case r.isLetter() => str.add(r)
+            case r.isNumber() && allowNumbers => str.add(r)
+            case (r.isAsciiPunctuation() || isSymbol(r)) && allowSymbols => str.add(r)
+            case r.isWhiteSpace() && allowSpaces && !firstOrLast(str.size, strLen) => str.add(r)
             case _ => continue
         }
     }

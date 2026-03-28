@@ -38,7 +38,7 @@ public class TestInArray {
         @Expect(inArrayIntFlex(UInt8(55), ArrayList<Int>([-1, -2, 1, 2, 3, 4, 5, 6, 55])), true)
         @Expect(inArrayIntFlex(UInt64(255), ArrayList<Int8>([-1, -2, 1, 2, 3, 4, 5, 6, 126])), false)
         @Expect(inArrayIntFlex(0, ArrayList<Int32>([-1, -2, 1, 2, 3, 4, 5, 6])), false)
-        @Expect(inArrayIntFlex(1, ArrayList<Int64>([])), false)
+        @Expect(inArrayIntFlex(1, ArrayList<Int64>()), false)
         @Expect(inArrayIntFlex(13, ArrayList<UInt>([13])), true)
         @Expect(inArrayIntFlex(greatestUint64, ArrayList<UInt8>([1, 2, 3, 4, 5, 6])), false)
         @Expect(inArrayIntFlex(5555, ArrayList<UInt16>([1, 2, 3, 4, 5, 6, 5555])), true)

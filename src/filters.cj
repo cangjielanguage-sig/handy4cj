@@ -28,8 +28,8 @@ public func onlyLetters(sequence: String): String {
     if (sequence.toRuneArray().size == 0) {
         return ""
     }
-    let letters = ArrayList<String>([])
-    sequence.toRuneArray() |> filter {i => i.isLetter()} |> forEach<Rune> {i => letters.append(i.toString())}
+    let letters = ArrayList<String>()
+    sequence.toRuneArray() |> filter {i => i.isLetter()} |> forEach<Rune> {i => letters.add(i.toString())}
     return String.join(letters.toArray())
 }
 
@@ -38,8 +38,8 @@ public func onlyDigits(sequence: String): String {
     if (sequence.toRuneArray().size == 0) {
         return ""
     }
-    let digits = ArrayList<String>([])
-    sequence.toRuneArray() |> filter {i => i.isNumber()} |> forEach<Rune> {i => digits.append(i.toString())}
+    let digits = ArrayList<String>()
+    sequence.toRuneArray() |> filter {i => i.isNumber()} |> forEach<Rune> {i => digits.add(i.toString())}
     return String.join(digits.toArray())
 }
 
@@ -48,9 +48,9 @@ public func onlyLettersAndNumbers(sequence: String): String {
     if (sequence.toRuneArray().size == 0) {
         return ""
     }
-    let alphanumeric = ArrayList<String>([])
+    let alphanumeric = ArrayList<String>()
     sequence.toRuneArray() |> filter {i => i.isNumber() || i.isLetter()} |>
-        forEach<Rune> {i => alphanumeric.append(i.toString())}
+        forEach<Rune> {i => alphanumeric.add(i.toString())}
     return String.join(alphanumeric.toArray())
 }
 
@@ -59,7 +59,7 @@ public func removeDigits(sequeue: String): String {
     if (sequeue.toRuneArray().size == 0) {
         return ""
     }
-    let rs = ArrayList<String>([])
-    sequeue.toRuneArray() |> filter {i => !i.isNumber()} |> forEach<Rune> {i => rs.append(i.toString())}
+    let rs = ArrayList<String>()
+    sequeue.toRuneArray() |> filter {i => !i.isNumber()} |> forEach<Rune> {i => rs.add(i.toString())}
     return String.join(rs.toArray())
 }

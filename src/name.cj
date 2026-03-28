@@ -68,7 +68,7 @@ public func nameFirstAndLast(name: String, transformFlags: UInt): String {
     if (words.size == 1) {
         return words[0]
     }
-    return String.join(Array<String>([words[0], words[words.size - 1]]), delimiter: " ")
+    return String.join([words[0], words[words.size - 1]], delimiter: " ")
 }
 
 // NameFirst 返回给定输入中的第一个单词/名字，可选地根据 transformFlags 进行转换
@@ -99,7 +99,7 @@ public func nameInitials(name: String, transformFlags: UInt): String {
     if (words.size <= 0) {
         return ""
     }
-    let result = ArrayList<String>([])
-    words |> forEach<String> {i => result.append(i.toRuneArray()[0].toString())}
+    let result = ArrayList<String>()
+    words |> forEach<String> {i => result.add(i.toRuneArray()[0].toString())}
     return String.join(result.toArray(), delimiter: " ")
 }

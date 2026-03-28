@@ -4,12 +4,12 @@ import std.time.*
 
 // dateTimeAsString 根据格式化指令将 DateTime 变量格式化为字符串
 public func dateTimeAsString(dt: DateTime, format: String): String {
-    return dt.toString(format)
+    return dt.format(format)
 }
 
 // nowAsString 根据格式化指令将 DateTime.now() 格式化为字符串
 public func nowAsString(format: String): String {
-    return DateTime.now().toString(format)
+    return DateTime.now().format(format)
 }
 
 // today 返回今天的日期，时间为零小时、零分钟、零秒等。
@@ -17,20 +17,20 @@ public func nowAsString(format: String): String {
 public func today(): (DateTime, String) {
     let t = DateTime.now()
     let result = DateTime.of(year: t.year, month: t.month, dayOfMonth: t.dayOfMonth)
-    return (result, result.toString("yyyy-MM-dd"))
+    return (result, result.format("yyyy-MM-dd"))
 }
 
 // todayf 返回今天的日期，时间为零小时、零分钟、零秒等。
 // 返回一个时间和一个自定义格式的字符串
 public func todayf(format: String): (DateTime, String) {
     let t = DateTime.now()
-    return (DateTime.of(year: t.year, month: t.month, dayOfMonth: t.dayOfMonth), t.toString(format))
+    return (DateTime.of(year: t.year, month: t.month, dayOfMonth: t.dayOfMonth), t.format(format))
 }
 
 // YMD 返回今天的日期，并将其拆分为年、月和日
 public func YMD(): (Int, Int, Int) {
     let t = DateTime.now()
-    return (t.year, t.monthValue, t.dayOfMonth)
+    return (t.year, t.month.toInteger(), t.dayOfMonth)
 }
 
 // stringAsDateTime 根据格式化指令将 DateTime 变量格式化为字符串
@@ -91,7 +91,7 @@ public func elapsedTime(dtx: DateTime, dty: DateTime): (Int, Int, Int, Int, Int,
         dateTimeY = dtx
     }
     var year = dateTimeX.year - dateTimeY.year
-    var month = dateTimeX.monthValue - dateTimeY.monthValue
+    var month = dateTimeX.month.toInteger() - dateTimeY.month.toInteger()
     var day = dateTimeX.dayOfMonth - dateTimeY.dayOfMonth
     var hour = dateTimeX.hour - dateTimeY.hour
     var minute = dateTimeX.minute - dateTimeY.minute
@@ -150,7 +150,7 @@ public func monthLastDay(year: Int, month: Int): Int {
     if (month < 1 || month > 12 || year < 0) {
         return 0
     }
-    let lastDayArrayZeroBased = Array<Int>([31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31])
+    let lastDayArrayZeroBased = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
     if (month != 2) {
         return lastDayArrayZeroBased[month - 1]
     }

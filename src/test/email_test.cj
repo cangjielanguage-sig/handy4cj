@@ -18,8 +18,7 @@ public class TestCheckEmail {
 public class TestEmail {
     @TestCase
     public func test_checkEmail() {
-        let testList = Array<TestCheckEmail>(
-            [
+        let testList = [
                 TestCheckEmail("test@example.com", true),
                 TestCheckEmail("user.name@subdomain.example.co", true),
                 TestCheckEmail("invalid-email@", false),
@@ -32,7 +31,6 @@ public class TestEmail {
                 TestCheckEmail("valid.email+tag@example.com", true),
                 TestCheckEmail("a@b.c", true)
             ]
-        )
         testList |> forEach<TestCheckEmail> {
             i => @Expect(checkEmail(i.input), i.expectedOutput)
         }
